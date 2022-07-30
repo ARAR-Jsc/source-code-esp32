@@ -1,0 +1,908 @@
+******* de chay firefox tren may ao 40GB *******************************
+	cach 1. chay lenh: cd /
+			sudo xdg-open etc/apt/sources.list (tat pup-up bat len dau tien) 
+	cach 2.chay cac lenh: su ---> nhap mk
+			 cd usr/lib/firefox-4.0/
+			 sudo chmod +x firefox.sh
+			 sudo ./firefox.sh
+
+************************************************************************
+
+********cach dat lai mk tai khoan linux*********
+
+khi tk root co password ma minh ko biet:
+khi khoi chay vmware (hien logo cua vmware) nhan giu shift den khi recovery menu xuat hien
+ --> chon dong he dieu hanh mong muon
+ --> nhan enter
+ --> tro toi dong inux/inix di toi cuoi dong co chu handoff
+ --> them vao sau handoff: init=/bin/bash --> enter --> reboot
+ --> mount -n -o remount,rw / --> enter
+ --> passwd [ten tai khoan] vidu o day la ltk/root
+ --> reboot
+*************************************************
+khi tai khoan root khong co password:
+khi khoi chay vmware (hien logo cua vmware) nhan giu shift den khi recovery menu xuat hien
+ --> chon dong co chu recovery mode --> enter
+ --> tro toi root --> enter
+ --> mount -n -o remount,rw / --> enter
+ --> passwd [ten tai khoan] vidu o day la ltk/root
+ --> reboot
+ 
+ khi vao lai giao dien GUI, co the khoa tai khoan root : sudo passwd --lock root /sudo -d root
+ de mo lai sudo passwd root --> dat lai mk
+ 
+*************************************************
+
+****cach dat linux la os mac dinh khi khi dong ko dung grub-customizer ******
+1. xem file /boot/grub/grub.cfg ----> tim menuentry cua linux la bao nhieu
+2. xem file /etc/default/grub   ----> doi "GRUB_DEFAULT = " thanh so mong muon
+3. sudo update-grub
+
+*****************************************************************************
+
+***********truy cap o dia qua terminal**********************************
+1. liet ke tat ca o dia tren linux: sudo fdisk -l (can dung lenh sudo)
+2. mount 1 o dia (dieu nay giup truy cap vao o dia /dev/sdax thong qua terminal): sudo mount /dev/sdax /media/folder_created_user
+3. unmount 1 o dia khoi he thong (filesystem): sudo umount /dev/sdax
+
+-note: for android device:  + run command usb-devices for device name (loop ...)
+							+ it's at /run/user/1000/gvfs/
+
+************************************************************************
+
+************tu dong ke khung vien cho cell trong excel******************
+1. boi den so luong o can tao khung vien tu dong
+2. the Home --> mui ten ben canh Conditional Formatting --> New Rules --> chon "Use a formula to determine which cells to format"
+--> nhap cong thuc =counta(cell dau tien trong nhung o duoc boi den (ko dung dia chi tuyet doi (vi du: $F$3))>0 --> enter --> done
+
+************************************************************************
+
+
+************tao danh sach so xuong phu thuoc vao danh sach khac trong excel******************
+1. dung ham OFFSET, MATCH va COUNTIFS de thuc hien
+
+** vi du: tao danh sach (data validation --list) cho huyen phu thuoc vao tinh.
+	1- tao list cho tinh nhu thong thuong
+	2- tao bang du lieu cho tinh va huyen (da sap sep, xoa nhung o lap lai)
+	dung cong thuc tao list:
+	=OFFSET(o dau tien cua bang du lieu can dung (o day la bang du lieu tinh va huyen vua tao), MATCH(gia tri tim kiem, vung tim
+	kiem (o day la bang du lieu tinh va huyen vua tao),
+	loai tim kiem (thuong la 0))-1, vi tri cot can lay du lieu de tao list so voi o dau tien (noi den trong cong thuc), COUNTIFS(vung tim
+	kiem (o day la bang du lieu tinh va huyen vua tao), gia tri tim kiem))
+
+xem them trong file excel cua exel_compress.zip
+
+************************************************************************
+
+************lay thoi gian va ngay trong  excel******************
+1. lay ngay: =today()
+2. lay gio: =now()
+
+
+************************************************************************
+
+
+*****************LED drivers IC*****************************************
+Drivers IC: 
+1. MAX7219 dang gap van de ve nguon (hoat dong voi nguon AC-DC, nguon AC cua xe chua hoat dong
+2. TLC5971PWPR (banlinhkien.com)(LED RGB)
+3. TM1629 (16-segments LED drivers)(banlinhkien.com)
+
+************************************************************************
+
+*********************** turn on wifi card ******************************
+- dung iwconfig de xem thong tin ve loai hien co tren may
+- dung sudo ifconfig [ten_card_wifi_vidu_wlo1(tu iwconfig command)] up de mo wifi (down de tat wifi)
+- dung sudo ifconfig wlo1 essid [ten mang wifi] key s:password de ket noi wifi chuan ma hoa WEP (wlo1: ten card lay tu iwconfig command
+s:password (nhap password duoi dang ma ASCII)
+
++++ for WPA/WPA2 encode (chua hoat dong duoc):
+   - xem danh sach wifi device name: /sbin/iw dev
+   - kiem tra wifi device da duoc bat hay chua: ip link show wlo1
+   - dung sudo ip link set wlo1 up de bat wifi len neu wifi chua duoc bat
+   - kiem tra trang thai ket noi: /sbin/iw wlo1 link
+   - xem diem wifi do la gi: /sbin/iw wlo1 scan
+   - ket noi toi diem wifi:
+      + sudo -s de cho biet cac hoat dong sau do se duoc chay o root
+
+
+************************************************************************
+
+****************** dieu khien am luong qua terminal*********************
+- mute/unmute (tac dong den ca giao dien do hoa): amixer -D pulse sset Master mute/unmute
+- tang/giam am luong: amixer -D pulse sset Master [number]%+/- (+/- tuong ung tang/giam am luong)
+- dat cho 1 gia tri: amixer -D pulse sset Master [number]%
+************************************************************************
+
+************ xem lich su sua file tu github *****************************
+- git log path_to_file (chi xem commit nao ko xem duoc noi dung da sua)
+ or git log --follow -p -- path_to_file > resultFile.log (xem duoc da sua nhung gi)
+
+************************************************************************
+
+************ xem tag/branch hien tai ***********************************
+- tag: git describe --exact-match --tag
+- branch: git branch
+
+************************************************************************
+
+************ nhay toi dau hoac cuoi file *******************************
+- nhay toi cuoi file : shift + g, nhay e dau file g
+
+************************************************************************
+
+************ grep/find command *****************************************
+- grep (tim chuoi trong file): grep -Rn "chuoi can tim" [vi tri tim]
+ex: grep -Rn "xin" ./ (tim tu xin o vi tri hien tai va thu muc con (-R)
+(n) in so dong cua dong trung khop)
+- find: find [vi tri tim] option "chuan can tim":
+ex: find ./ -name "knowledgeLinux.txt" (tim theo ten, file knowledgeLinux.txt)
+
+************************************************************************
+
+********************* gan phim chuc nang trong vim *********************
++++ (de biet cac lenh khac: mo vim len, sau do :help map)
+-gan F3 bang chen # vao ngay dau dong: mo file .vimrc len them dong :noremap <F3> <S-i>#<Esc>  (<F3> la phim
+F3 duoc gan trong vim, <S-i> vim se hieu la shift + i, 3 vim se them "#" vao, <Esc> la phim ESC
+
+
+- gan tab = 4 space: set tabstop=4 (no van duoc xem la \t (tab) nhung vim se thong dich no bang 4 (co the gay loi khi lam viec voi python),
+softtabstop=4 (chinh tab = 4 column)
+
+************************************************************************
+
+********** luu y khi vua cai lai ubuntu ********************************
+ - Sau khi cai dat lai linux, vi editor la version cu nen phai cai vim moi:
+	+ sudo apt intstall vim
+
+************************************************************************
+
+*********** mo file video/.txt in text editor bang terminal*************
+- xdg-open video_name/text_name    (xem toan bo lenh: /usr/bin)
+
+************************************************************************
+
+*********** mo file html code dung firefox/googel chrome ***************
+- firefox/google-chrome html_file_name
+
+************************************************************************
+
+*********** tu khoa static trong c/c++ *********************************
+++ bien static co gia tri trong toan chuong trinh khong phai chi trong ham con chua no ++
+
++ bien static trong ham: khoi tao bien 1 lan du ham chua dong khoi tao bien do duoc goi nhieu lan, gia tri truoc do 
+cua bien se duoc su dung thay vi khoi tao lai bien do
+
++ bien static trong class: cung tuong tu nhung vi khong duyoc phep khoi tao gia tri bien trong constructor nen phai 
+khoi tao ben ngoai (khoi tao truoc khi su dung), cung cap voi constructor va destructor
+
++ ham static: static function chi duoc phep truy cap vao bien static hoac ham static khac ma thoi, khi truy cap vao
+static member nen dung toan tu phan giai pham vi (:: operator)
+
+************************************************************************
+
+*********** bash script ************************************************
+
+#!/bin/bash
+count=1
+while [ $count -lt $(($#+1)) ]
+do
+if [ ${!count} = "x" ]   # get argument nth automatically
+then
+	((count1=count+1))
+	x=${!count1}
+elif [ ${!count} = "y" ]
+then
+	((count1 = count + 1)) # call math have to use "(("
+	y=${!count1}
+elif [ ${!count} = "z" ]
+then
+	((count1 = count + 1)) 
+	z=${!count1}
+fi
+((count += 1))
+done
+echo $x -- $y -- $z
+
+************************************************************************
+
+********** how to see all installed package on linux *******************
+apt list --installed
+
+************************************************************************
+
+
+********** Python.h trong linux ****************************************
+ - /usr/include/pythonx.x/Python.h
+
+************************************************************************
+
+********** cac buoc boot trong linux ***********************************
+note: ca u-boot va kernel deu co 3 lop: + layer core (arm cortexA8...)
+					+ SoC layer
+					+ board layer
+
+  b.1)  + ROM bootloader (co san ko the thay doi) se load hoac bootloader (u-boot)
+	hoac secondary program loader vao internal memory (khi bootloader u-boot qua lon khong
+	vua voi internal memory --> ROM bootloader se tai secondary program loader vao internal memory
+	thay vi tai bootloader u-boot).
+	+ O trong ROM bootloader co co che kiem tra vung nho, noi ma SPL duoc luu, de dam bao an toan, SPL thuong duoc tao nhieu ban,
+	khi ROM bootloader check ban nay hong se dung ban tiep theo.
+	+ ROM bootloader co the su dung vai peripheral I2C, UART vi ROM bootloader tai SPL, u-boot dua vao cac chan "boot mode pin", 
+	1 so boot mode se chi tim SPL, u-boot o NAND flash, trong khi do 1 so boot mode khac se tim theo thu tu: NAND flash --> I2C interface
+	--> MMC ---> UART inteface 
+  b.2) Sau do bootloader u-boot se duoc tai len (boi ROM bootloader hoac secondary program loader (SPL) tuy vao b.1,
+	sau khi SPL duoc tai no se khoi tao cac gia tri cho process can thiet (vidu: xung clock), u-boot se dua SPL
+	de khoi tao gia tri de khong bi trung nhau
+  b.3) Sau khi tai u-boot thanh cong, u-boot se tai kernel len 
+
+************************************************************************
+
+************* cac file u-boot va tac dung cua no ***********************
+
+1) u-boot -> executable file in ELF format, duoc su dung cho trinh go loi (debugger)
+2) u-boot.bin -> executable that run on the device
+3) u-boot.img -> chua u-boot.bin va co header de chi cho boot ROM (co the xem la ROM
+bootloader) biet noi nao de tai u-boot.bin (khac voi boot mode pin, chan dung de chon boot mode)
+4) u-boot.srec -> chay tren dinh dang Motorola S-Record thong qua ket noi noi tiep (serial)
+5) MLO la secondary program loader (SPL)
+
+************************************************************************
+
+******* loi undefined referenece khi bien dich bang gcc*****************
+- fix:  1) dung g++ thay vi dung gcc (day la van de cua linker0
+		2) van dung gcc : gcc -g -o [name].exe .c/cpp file -lstdc++
+
+************************************************************************
+
+*************** su dung eagle pcb **************************************
+- them thu vien ben ngoai: check vi tri can them file: mo eagle --> vao control_panel --> chon libraries (check folder path)
+--> copy thu vien vao folder path tren --> tao 1 project schematic moi --> open library manager --> avalilable --> chon file thu vien
+--> chon use --> ok
+
+- trong layout: hay chon tOrigins (View -> layout setting)
+
+- tao lable cho 2 dau day: tao label cho 1 dau, dau con lai se chon icon R2 Name --> nhay dup vao dau can tao lable con lai
+************************************************************************
+
+**** luong chay cua u-boot/Makefile trong u-boot bootloader project*****
+tu lenh chay: make evb-rk3399_defconfig (vidu)
+--> dong 564 se nhan dong lenh nay va chay vao trong scripts/kconfig/Makefile de chay tiep
+
+************************************************************************
+
+********************* tu hoc makefile **********************************
+- output: source.c  (command nay yeu cau check file source.c (cung la $<, prerequisites) co bi thay doi khi (make command duoc goi) khong
+	g++ $< $(CFLAGS) -o $@
+	trong cau lenh nay: $< dai dien cho input (source files)
+						$@ dai dien cho target 
+						cau lenh tuong duong: g++ source.c -g -Wall -o output.exe
+
+- := co nghia la gan gia tri cho bien va bien do khong the gan gia tri khac duoc nua,
+  = gan gia tri nhu thong thuong, bien co the co gia tri khac xuyen suot makefile
+
+- khi make thuc hien viec include file theo Makefile, neu co file nao ko duoc tim thay, make se tam thoi bo qua, tiep tuc include sau do se quay lai include nhung file ko tim thay 1 lan nua, neu van khong thay -> dump fatal error va thoat. De buoc make ko tao fatal error trong truong hop nay co1 the dung, -include hoac sinclude command
+
+************************************************************************
+
+
+*************** cach tuy bien kernel ***********************************
+voi source code tu orange pi, sua external/config/kernel/linux-rk3399-legacy.config
+--> sua Makefile trong driver --> sua Makefile trong Driver/phy/rockchip
+--Note:
+orangepi-build/kernel/orange-pi-4.4-rockchip64/drivers/phy/rockchip
+orangepi-build/kernel/orange-pi-4.4-rockchip64/drivers/
+da bi chinh sua boi TD (2 file nay nam trong source code kernel duoc tai xuong boi main.sh (lenh fetch_from_repo)
+hoac tu tai tai (https://github.com/orangepi-xunlong/linux-orangepi.git)roi doi ten sang orangepi-4.4-ckchip64 
+
+++++ Noi incude cac thu vien trong cac file .c la kernel/include (voi source code cua OS tai tu orangepi)
+
+************************************************************************
+
+******************** .o and .ko file (kernel) **************************
+- .o file is user space program object file
+- .ko file is object file used by kernel (kernel object), .ko file is created by linking .o file (user space program object file) and another object file,
+which compile from .mod.c file (contain additional info for kernel).
+- we can modify this file (.mod.c file) by modpost command (kernel/A/scripts/mod/  , A folder maybe exist or not, optional),
+modify .ko by insmod command
+- Referrence: https://tldp.org/HOWTO/Module-HOWTO/linuxversions.html
+
+************************************************************************
+
+************** cut and paste command ***********************************
+- we can cut and paste writing command ($ ....) on terminal by ctrl + k to cut from cursor to begin, ctrl + u to cut from cursor to end,
+ctrl + y to paste it intoorther command ($....)
+
+************************************************************************
+
+************************* error khi update *****************************
+- Sau khi chay lenh sudo ./build.sh de build OS cho orangepi, no se tao aptly.list trong /etc/apt/source.list.d/, dieu nay se gay ra loi NO_PUBLICKEY 
+khi chay lenh sudo apt/update (do do hay bo qua loi nay khi update he thong)
+
+************************************************************************
+
+*********** list all installed package and it's path  on android *******
+- list all package: adb shell pm list package -f (-f is option to show tha path)
+- to see all package via terminal: adb shell --> su --> enter (su is sudo on android)
+
+************************************************************************
+
+**************************** su dung eagle pcb *************************
+- chon bieu tuong polygon, roi ve duong vien cua lop phu nay 
+- de bat grid: nhan F6
+- de chuyen linh kien tu layer nay sang layer khac: nhan chuot giua, chuot giua cung tao via khi dang o che do di day
+- de cho 1 via (duoc them vao sau) duoc noi den GND (phu dong), dung R2(Name) button va dat ten cho no la GND la duoc
+- Ratnest button dung de phu dong cho vung polygon (tu tao), và command: ripup @; là de xoa ratnest này, de ratnest lai
+- khi 1 pin noi (smd pin) da noi voi GND area (polygon area) nhung van con bao airline do routline của GND area qua lon
+--> chon vung GND (polygon) area -> chuot phai (hoac chon nut info (chu i) cung duoc)--> properties
+--> doi width cho phu hop (thuong la chon nho hon gia tri hien tai)
+************************************************************************
+
+************************** (flash OS to EMMC) **************************
+- script install_to_emmc.csh nam o: https://github.com/loboris/OrangePi-BuildLinux.git
+- check health status of emmc : sudo mmc extcsd read /dev/mmcblkx (sudo fdisk -l de biet emmc mmcblk nao)
+
+************************************************************************
+
+************** copy file tu may duoc access thong qua ssh **************
+- scp dia chi file (o may cua minh) user@ip_address:/folder_destination/ (cua may duoc access thong qua ssh)
+v.d:
+scp /home/hello/Desktop/findScriptToFlashEMMC/OrangePi-BuildLinux/install_to_emmc  root@192.168.100.10:/home/orangepi
+
+************************************************************************
+
+********************* upload os into eMMC cho orangepi 4B **************
+- thao the nho ra khoi bo (de the SD van vao recovery mode duoc nhung khong flash firmware duoc, tren orangepi 4b 
+nhan nut recovery sau do nhan nut reset, the nut reset giu nut recovery 3s)
+- khi dang co san android 8.1 trong eMMC, chon reboot to bootloader de vao MASKROM mode cua rockchip
+- install android OS to eMMC qua usb c tren orangepi (tool Linux_Upgrade_Tool_v1.21, android Image tai tu orangepi):
+	+ cd toi Linux_Upgrade_Tool_v1.21, sau do chay lenh: sudo ./upgrade_tool de check board duoc nhan boi PC chua)
+	+ sudo ./upgrade_tool ef android OS image Erase EMMC (xoa eMMC)
+	+ sudo ./upgrade_tool uf android OS image Burn to EMMC (install android OS to EMMC), sau khi chay lenh nay, upgrade_tool bao
+Download Loader fail (nhung thuc te android OS da duoc cai ok, reboot lai board orangepi (ko insert the SD), android OS se duoc chay)
+
+************************************************************************
+
+*********************** loi khi build kernel ***************************
+-khi build kernel ma gap loi:
+		"multiple (or no) load addresses:
+		This is incompatible with uImages
+		Specify LOADADDR on the commandline to build an uImage"
+	-->la do khi chay lenh compile uImage khong truyen vao LOADADDR, fix truyen 0x10008000 vao cho LOADADDR:
+		make ARCH=arm LOADADDR=0x10008000 CROSS_COMPILE=arm-linux-gnueabihf- uImage modules
+************************************************************************
+
+************ compile u-boot, kernel from scratch ***********************
+tham khoa tai: http://www.orangepi.org/Docs/Building.html
+truoc tien, export nhung bien nay:
+	export ARCH=arm
+	export DTC_FLAGS="-@"
+	export PATH=~/gcc-linaro/bin/:$PATH
+	export CROSS_COMPILE=arm-linux-gnueabihf-
+	#export CROSS_COMPILE=arm-none-linux-gnueabihf-
+(co the tao file exportCompile roi source cung duoc)
+
+1) compile u-boot:
+- clone u-boot source code: github.com/orangepi-xunlong/u-boot-orangepi.git
+- make the u-boot configure:
+	make CROSS_COMPILE=arm-linux-gnueabihf- Orangepi_defconfig
+- make the u-boot:
+	make CROSS_COMPILE=arm-linux-gnueabihf-
+--> sau buoc nay se duoc: u-boot-sunxi-with-spl.bin, u-boot.img, u-boot.bin,
+spl/sunxi-spl.bin neu ko bi loi.
+2) build script.bin:
+- clone sunxi-tools: github.com/linux-sunxi/sunxi-tools
+- clone sunxi-boards: github.com/linux-sunxi/sunxi-boards
+- cd toi sunxi-tools:
+	make
+--> se duoc fex2bin, bin2fex sau buoc nay
+- tao script.bin:
+	${sunxi_tools}/fex2bin xunlong_orange_pi_pc_plus.fex script.bin
+	(dung o sunxi-boards, chay fex2bin o sunxi_tools, 
+	xunlong_orange_pi_pc_plus.fex o sunxi-boards/sys_config/h3/)
+3) build the kernel:
+- clone kernel source code: github.com/orangepi-xunlong/linux-orangepi.git
+- set default kernel config:
+	make ARCH=arm, CROSS_COMPILE=arm-linux-gnueabihf- orangepi_defconfig (hoac sunxi_defconfig cung duoc)
+- make to change kernel config (optional):
+	make ARCH=arm, CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+- make the uImage and modules (o buoc nay se bi loi( nhu "loi khi build kernel" o tren + cach fix):
+	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- uImage modules
+- make full module tree:
+	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=output modules_install
+--> cac file duoc tao: uImage (arch/arm/boot/), output/lib/modules/x.x...
+
+************************************************************************
+
+******** create bootable sd card from kernel, u-boot o tren ************
+tham khao tai: http://www.orangepi.org/Docs/Settingup.html
+- partitions and format:
+	+ export card=/dev/sdb ; export p="" (neu the gan trong usb adopter)
+	+ export card=/dev/mmcblk0 ; export p=p (gan bang khe doc the)
+	+ tao phanvung:
+		sudo fdisk ${card} -->n -->p -->1 -->2048 -->+20M (tao phan vung 1)
+		n -->p -->2 -->43008 -->enter (tao phan vung 2)
+		-->w -->enter
+	+ format: 
+			sudo mkfs.vfat ${card}${p}1	
+			sudo mkfs.ext4 ${card}${p}2
+
+- bootloader:
+	+ erase sd:
+		sudo dd if=/dev/zero of=${card} bs=1k count=1023 seek=1
+	+ burn bootloader:
+		sudo dd if=${u-boot-dir}/u-boot-sunxi-with-spl.bin of=${card} bs=1024 seek=8
+
+- boot script:
+	+ mount first partition:	
+		sudo mount ${card}${p}1 /mnt
+	+ tao boot.scr
+		++ tao boot.cmd trong /mnt, voi noi dung sau:
+#################
+setenv bootargs console=ttyS0,115200 noinitrd 
+disp.screen0_output_mode=EDID:1280x720p50 init=/init
+root=/dev/mmcblk0p2 rootwait panic=10 ${extra}
+fatload mmc 0 0x43000000 script.bin 
+fatload mmc 0 0x48000000 uImage 
+bootm 0x48000000
+#################
+		++ tao boot.scr:
+			sudo mkimage -C none -A arm -T script -d /mnt/boot.cmd /mnt/boot.scr
+	
+	+ tao uEnv.txt trong /mnt voi noi dung nhu sau:
+#################
+bootargs=console=ttyS0,115200 disp.screen0_output_mode=EDID:1024x768p50 hdmi
+aload_script=fatload mmc 0 0x43000000 script.bin;
+aload_kernel=fatload mmc 0 0x48000000 uImage;bootm 0x48000000;
+uenvcmd=run aload_script aload_kernel
+#################
+
+- kernel:
+	+ copy uImage va script.bin toi first partition (tuc la /mnt, phan vung 20M)
+	+ umount partition nay:
+		sudo umount /mnt
+---> bo the vao bo test thu (chu yeu de test bootloader)
+************************************************************************
+
+********* build va flash u-boot via sunxi-fel orangepi pc/pc+ **********
+- build (don gian hon o tren):
+    + git source code -->
+make CROSS_COMPILE=arm-linux-gnueabihf- orangepi_pc_defconfig (orangepi_pc_plus_defconfig neu la pc plus)
+    + make CROSS_COMPILE=arm-linux-gnueabihf- menuconfig (optional)
+    + make CROSS_COMPILE=arm-linux-gnueabihf-
+- flash u-boot via sunxi-tool (sunxi-fel) (nen ket noi dong thoi uart-putty de xem u-boot sau lenh flash):
+    + sudo sunxi-fel -v uboot u-boot-sunxi-with-spl.bin
+
+************************************************************************
+
+
+********** cach debug file thu vien .h/.cpp tren arduino ***************
+- them #include <Arduino.h>, #include <SoftwareSerial.h> dong thoi khoi tao 1 SoftwareSerial object trong file .cpp dang muon debug
+- tai dong code muon debug trong file c.pp, khoi chay SoftwareSerial object (.begin(baudrate)) ---> use this object to print line (println)
+
+************************************************************************
+
+********* xem chi tiet cua insmod error (linux)********************************
+- run sudo insmod [.ko file] --> dmesg | tail -1 --> xem chinh xac la loi gi
+
+************************************************************************
+
+************* cach tao usb boot (linux software) ***********************
+- dung Ventoy (back up tren drive (cda account), hoac tu git: https://github.com/ventoy/Ventoy
+- cach cai win tu phan mem ghost: tai file ghost ve, xem la file ghost tu phan mem ghost nao (vd: .tib: arconis true image), vao trang web do tao tk (trial 30 ngay (tu 25/05/2022) cda257....gmail.com, mk acronistrueimage)
+--> product --> rescure boot media (.iso file) --> dung ventoy de tao usb boot nhu khi lam cho .iso cua HDH.
+- file ghost (.tib) nên de trong 1 usb khac duoc dinh dang la ntfs de arconis true image co the nhin thay khi chay o bios
+
+************************************************************************
+
+****************** loi dinh dang khi cai win ***************************
+- sua loi khong cai window duoc vi phan vung ko giong dinh dang: tai man cua so do, nhan shift + F10 (mo command prompt) --> diskpart -->enter
+--> list disk --> enter --> chon o dia can format: select Disk x --> enter --> clean --> enter --> convert GPT (day la truong hop can chuyen tu MBR sang GPT) --> enter
+
+- dung command: du -sh [path] de xem dung luong cua file/folder
+
+************************************************************************
+
+************************** build .dtb file *****************************
+- dtc can be installed by this command on linux:
+
+	sudo apt-get install device-tree-compiler
+
+- you can compile dts or dtsi files by this command:
+
+	dtc -I dts -O dtb -o devicetree_file_name.dtb devicetree_file_name.dts
+
+- you can convert dts to dtb by this command:
+
+	dtc -I dts -O dtb -f devicetree_file_name.dts -o devicetree_file_name.dtb
+
+- you can convert dtb to dts by this command:
+
+	dtc -I dtb -O dts -f devicetree_file_name.dtb -o devicetree_file_name.dts
+************************************************************************
+
+
+************** cach dung for thay cho foreach **************************
+-thay tu trong nhieu file:
+    for varName in `find ./ -name "*.tenMoRong"` -->enter
+    do --> enter
+    sed s/tuCanthay/tuThay/g -i $varName -->enter
+    done -->enter
+
+************************************************************************
+
+
+************** tao intial RAM disk (uIinitrd.img) **********************
+tham khao: https://www.opensourceforu.com/2014/03/building-embedded-system-based-initial-ram-disk/
+- tao file initrd.img bang dd: 
+    dd if=/dev/zero of=path_output/initrd.img bs=$expectSize count=1 (thuong size =4096K, count=1 tuc la tao 1 file)
+- convert initrd.img to file system:
+    mke2fs -F -m 0 -N 100 initrd.img
+- convert to RAM disk format:
+    sudo mkimage -A arm -O linux -T ramdisk -C none -a 0 -e 0 -n uInitrd -d path_to_initrd.img pathToOutput/uInitrd.img
+(mkimge : sudo apt install u-boot-tools)
+************************************************************************
+
+********************** lenh burn to board ******************************
+sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin write 0x42000000 linux-orangepi/arch/arm/boot/uImage write 0x43100000 script.bin write 0x43000000 sun8i-h3-orangepi-pc-plus.dtb write 0x43300000 uInitrd.img write 0x43200000 boot.scr
+
+************************************************************************
+
+************************ meo dung tren linux ***************************
+- mo disk utils (xem phan vung o dia): 
+	gnome-disks (trong goi: gnome-disk-utility)
+- ung dung khoi dong cung he thong:
+	gnome-session-properties (trong goi: gnome-startup-applications)
+- ...swap//: // buoc swap file luu voi path day du
+- chuyen swap file sang .vim/swapfiles:
+    mkdir -p $HOME/.vim/swapfiles  (tao folder swapfiles)
+    set directory=$HOME/.vim/swapfiles//
+- tao shortcut voi env desktop ko co show desktop command: install wmctrl, tao 1 scritp trong /usr/bin (de cho de gan lenh trong phan tao shortcut mac dinh)
+dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
+
++++++++++++++++++++++++++++++++++++++++++++++++++
+	#!/bin/bash
+	file='/home/dell/paraCheckFor_showDesktop.txt'
+
+
+	while read Line; do 
+	status=$Line
+	done <$file
+	if [[ $status != "on" ]]
+	then
+	    wmctrl -k on
+	    echo "on" > '/home/dell/paraCheckFor_showDesktop.txt' 
+	else
+	    echo "off" > '/home/dell/paraCheckFor_showDesktop.txt' 
+	    wmctrl -k off
+	fi
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+************************************************************************
+
+
+***************** set title for terminal tab *************************** 
+- them doan code ben duoi vao ~/.bashrc
+
+    function set-title() {
+      if [[ -z "$ORIG" ]]; then
+	ORIG=$PS1
+      fi
+      TITLE="\[\e]2;$*\a\]"
+      PS1=${ORIG}${TITLE}
+    }
+
+- cach dung: set-title terminal_tab_title_name
+
+- dung thang lenh duoc ho tro tren xfce4-terminal (kubuntu: /usr/bin): xfce4-terminal --tab --title=titleName (xfce4-terminal --tab : open new tab)
+
+************************************************************************
+
+**************** fix loi khi nap u-boot orangepi borad *****************
+- file boot.scr da dung, dia chi write uboot da dung nhung bi bao loi khi
+khi chay u-boot, vi source code chua dung (dung u-boot-orangepi, khong dung
+tu u-boot.git)
+- not found uImage||dtb file||uInitrd hay check lai dia chi o bootm,
+theo thu tu kernel (uImage) --> ramdisk --> dtb, khong co khac 
+
+************************************************************************
+
+************* enable mmc bootbus in u-boot mode ************************
+- voi source code mainline u-boot , de u-boot chay duoc mmc bootbus, can enable CONFIG_SUPPORT_EMMC_BOOT (trong u-boot/cmd/boom.c)
+- cac lenh uboot ko goi duoc trong u-boot prompt nhung co trong bootm.c co the do khong duoc lien ket trong file u-boot/cmd/bootm.su (u-boot mainline)
+
+************************************************************************
+
+
+******************* yocto project va orangepi **************************
+trang tham khao: https://girishjoshi.io/post/build-image-for-orangepi-zero-using-yocto-project/
+repo: https://github.com/Halolo/orange-pi-distro
+
+- khi clone ve het cac source code:  git checkout cac meta-* (tru meta-opi), poky ve tag thud hoac sumo (hien tai nam 2022), sau do moi co the build duoc (tuy van con loi o qua trinh build phia sau, nhung lam buoc nay giup ta ko phai fix 1 nui loi truoc khi co the bat dau build)
+- cac loi cac the gap phai: 
+    + loi override old syntax (do khac version cua bitbake: ten bien viet hoa + "_" + viet thuong), fix: doi "_" -> ":" o giua chu hoa va chu thuong)
+    + loi ten bien khong dung(?!), thong bao loi hien ra la chu viet thuong het --> doi thanh chu viet hoa het
+    + khong co file sanity.conf, default.conf --> tu tao sanity.conf trong build/conf/sanity.conf, build/conf/multiconfig/default.conf
+    + FuncFailed not attribute of ... (checkout lich su thay doi cua file bitbake/lib/bb/Build.py (git log --follow -p path_to_file) ---> copy ve
+    (tot nhat hay checkout nhu buoc o tren de tranh cac loi)
+
+************************************************************************
+
+**************** cach tao SDcard bootable opipcplus ********************
+-   file can: u-boot-sunxi-with-spl.bin, sun8i-h3-orangepi-pc-plus.dtb, boot.scr, script.bin, orangepiEnv.txt, zImage, uInitrd (nen dung file ko dung file link)
+-   dd u-boot-sunxi-with-spl.bin vao the sdcard voi bs=1024 seek=8 (32 bit)
+-   dung fdisk tao 2 phan vung, phan vung 1 chon W95 FAT (LBA) bang cach nhan t nhan tiep c ngay trong terminal cua fdisk
+    phan vung 2 cu de mac dinh vay 
+-   dinh dang phan vung 1 bang mkfs.vfat (khong anh huong den w95 FAT (LBA) o tren, phan vung 2 mkfs.ext2 (phai la ext2, neu khong se bi loi initfs)
+-   copy cac file ke tren tru file u-boot-sunxi-with-spl.bin vao thu muc boot (mkdir phan_vung_1/boot), copy tat ca folder cua 1 iso khac de vao trong phan vung 2 (tao rootfs)
+-   trong file orangepiEnv.txt sua rootdev=UUID=gia_tri quan sat thay khi cd /media/pc_name/phan_vung_2, neu khong se khong boot duoc
+-   umout sd card va boot
+* hien tai chi boot duoc tren serial, con HDMI van chua boot duoc (test tren orangepipcplus)
+
+************************************************************************
+
+
+******** fix loi khong thay lzma  python (ko co attribute _lzma) *******
+- go python vua cai , install liblzma-dev, lzma
+    sudo apt install liblzma-dev lzma
+--> sau do cai dat lai python ban mong muon (bi loi nay nay khi cai dat idf lap trnh cho esp32
+
+************************************************************************
+
+*********** cach them ung dung  vao image tren yocto *******************
+- trong meta- chinh dang compile (ko tinh poky), them recipes de chua source code: recipes-xxx/helloworld/file/src   (file/src do trong .bb file:://src <--> /file/src/)
+tao 1 .bb file trong helloworld voi noi dung nhu sau:
+
+	SUMMARY = "test application helloworld"
+	DESCRIPTION = "Custom recipe to build helloworld.c application"
+	LICENSE = "MIT"
+	LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+
+	# Where to find source files (can be local, GitHub, etc.)
+	SRC_URI = "file://src"
+
+	# Where to keep downloaded source files (in tmp/work/...)
+	S = "${WORKDIR}/src"
+
+	# Pass arguments to linker
+	TARGET_CC_ARCH += "${LDFLAGS}"
+
+	# Cross-compile source code
+	do_compile() {
+	    ${CC} -o helloworld helloworld.c (danh cho khi compile ung dung c, neu co)
+	    ${CXX} -o hello_world hello_world.cpp (danh cho khi compile ung dung cpp, neu co)
+	}
+
+	# Create /usr/bin in rootfs and copy program to it
+	do_install() {
+	    install -d ${D}${bindir}
+	    install -m 0755 helloworld ${D}${bindir} (cap quyen de ung dung chay, tuy so ung dung them vao image)
+	}
+- cau hinh cho ung dung tu chay sau khi boot (trong image file):
+    + tao  file recipes-xxx/systemd/helloworldsystemd_1.00.bb voi noi dung nhu sau
+
+	LICENSE = "CLOSED"
+	inherit systemd
+
+	SYSTEMD_AUTO_ENABLE = "enable"
+	SYSTEMD_SERVICE_${PN} += "helloworld.service"
+	SYSTEMD_SERVICE_${PN} += "hello_world.service"
+
+	SRC_URI_append += " file://helloworld.service "
+	SRC_URI_append += " file://hello_world.service "
+	FILES_${PN} += "${systemd_unitdir}/system/helloworld.service"
+	FILES_${PN} += "${systemd_unitdir}/system/hello_world.service"
+
+	do_install_append() {
+	  install -d ${D}/${systemd_unitdir}/system
+	  install -m 0644 ${WORKDIR}/helloworld.service ${D}/${systemd_unitdir}/system
+	  install -m 0644 ${WORKDIR}/hello_world.service ${D}/${systemd_unitdir}/system
+	}
+    + tao file service tuong ung voi ung dung can autoboot:
+	
+	tao file recipes-xxx/systemd/files/helloworld.service voi noi dung nhu sau:
+	
+	[Unit]
+	Description=GNU Hello World startup script for KOAN training course
+
+	[Service]
+	ExecStart=/usr/bin/helloworld
+
+	[Install]
+	WantedBy=multi-user.target
+
+
+************************************************************************
+
+***************** su dung gpio tren esp32 esp-idf **********************
+- cau hinh: 
+    + gpio_pad_select_gpio(numOfPin);
+    + gpio_set_direction(numOfPin, GPIO_MODE_OUTPUT/INPUT/INPUT_OUTPUT);
+    + gpio_set_pull_mode(numOfPin, GPIO_PULLUP_ONLY/PULLDOWN_ONLY/PULLUP_PULLDOWN);
+    + gpio_set_level(numOfPin, 0/1); //write
+    + gpio_get_level(numOfPin); //read
+-[loi khi compile] error: implicit declaration of function 'gpio_pad_select_gpio'; did you mean 'esp_rom_gpio_pad_select_gpio'? [-Werror=implicit-function-declaration]
+--> them rom/gpio.h vao2 trong components/driver/include/driver/gpio.h
+
+************************************************************************
+
+****************** dieu khien gpio tren opipcplus **********************
+thanm khao: https://www.kernel.org/doc/Documentation/gpio/sysfs.txt
+
+-cach 1 dung thu vien WiringOP (thu vien chaun c)
+-cach 2 dung Userpace trong kernel:
+    + truoc khi build    enable (trong menuconfig): Device Drivers --> GPIO Support --> /sys/class/gpio/... (sysfs interface)
+khi build kernel
+    + sau khi boot kernel vua build:
+	echo 12 (pin muon dung, trong opipcplus : PA12) > /sys/class/gpio/export (thong bao cho kernel la dung chan nay lam chan I/O)
+	echo out > /sys/class/gpio/gpio12/direction (bao la chan ngo ra, gpio12 se duoc tao sau khi lenh echo 12 o tren)
+	
+	++ write: echo 1 > /sys/class/gpio/gpio12/value (ghi 1 vao chan 12 (xuat ra muc cao))
+	++ read: `cat /sys/class/gpio/gpio11/value` ket qua tra ra la string, co them dem nguyen lenh cat nay dat rong if [[]]
+
+* tuy nhien cach truy cap nay co kha nhieu nhuoc diem nen tu kernel 4.8 tro di da bi bo di roi, thay bang cach moi
+************************************************************************
+
+********************************** esp32 *******************************
+- nvs_flash_init() --> khoi tao 1 phan vung NVS mac dinh da duoc ma hoa, thuong se tao ket XTS ma hoa trong chip ESP, duoc dung khi NVS encryption
+duoc bat len (chay idf.py menuconfig --> security/flash_encryption de bat NVS encryption feature)
+- ESP_ERROR_CHECK() --> giong nhu abort(), neu thong so dau vao khac "ESP_OK" --> ham abort() se duoc goi
+
+************************************************************************
+
+*********************** arduino esp8266 wifi ***************************
+
+source code:
+
+#include <ESP8266WiFi.h>
+....
+WiFiServer server(80);
+//ESP8266WebServer server(80);
+ 
+
+void setup()
+
+{
+....
+
+//*------------------HTML Page Code---------------------*//
+
+
+  
+  //client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+  //client.println("<link rel=\"icon\" href=\"data:,\">");
+  
+  ......
+  
+ //source code tren drive
+}
+
+2 dong client.println tren se khien cho 1 luc chi co 1 thiet bi vao duoc neu co them thiet bi khac truy cap
+se dan den ca 2 thiet bi cung ko the truy cap duoc (du truoc do 1 trong 2 thiet bi van ket noi binh thuong)
+
+**mot so link tham khao khac (giai phap khac rat hay)
+    https://arduino.stackexchange.com/questions/31256/multiple-client-server-over-wifi
+    https://forum.arduino.cc/t/connecting-multiple-clients-with-esp8266/636341
+
+************************************************************************
+
+
+********* how to fix "you need at least ...GB to install ubuntu" *******
+- khi cai dat dual-boot win + linux, voi may dang cau hinh SATA: raid, se bi loi "You need at least ..GB to install ubuntu", cach fix:
+    + boot vao win, chay cmd voi quyen admin
+    + go lenh bcdedit /set safeboot minial
+    + restart vao bios setup --> doi SATA operation tu RAID ON --> AHCI, save + exit
+    + boot vao lai win, chay cmd quyen admin, go lenh bcdedit /deletevalue safeboot
+    ---> da co the cai linux nhu binh thuong
+
+************************************************************************
+
+****************** compile and install cmake ***************************
+- download source code from cmake.org/files/vx.xx/cmake-x.xx.0-rc2.tar.xz (file nay moi co bootstrap, khong phai clone tu https://github.com/Kitware/CMake
+- ./bootstrap --> make -j$(nproc) --> sudo make install (loi khong thay compiler ho tro c++11 --> tuc la dang thieu g++, sudo apt install g++ la duoc
+************************************************************************
+
+***************** dot (.) in meber of struct ***************************
+- no co nghia la khoi tao bien no dung truoc bang gia tri theo sao, vi du
+    struct point {int x, y;};
+    --> khoi tao: struct point p (2, 3) --> x = 2, y = 3
+    hoac struct point p (.y = 4, .x = 3) --> x = 3, y = 5  
+    ==> tuc la no cho phep viec khoi tao ko theo trat tu nhu khi khai bao struct (designator initializer)
+
+************************************************************************
+
+
+*************** system program problem detected ************************
+link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-detected
+
+- sudo rm /var/crash/* will delete old crashes and stop informing you about them until some package crashes again.
+
+- You can stop the service with sudo systemctl disable apport (and enable it again with sudo systemctl enable apport)
+
+- If you do not want to see crash reports you can disable it by doing sudo vim /etc/default/apport and changingenabled=1 to enabled=0. (or sudo nano /etc/default/apport). Editing it in reverse will enable it again.
+
+- You can delete the service with sudo apt purge apport (and install it again with sudo apt install apport)
+
+************************************************************************
+
+
+***************** no public key when update in linux *******************
+- sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key [enter key in terminal]
+- sudo apt update
+************************************************************************
+
+***************** cap phat bo nho trong c dung malloc ******************
+- contro cap 2: 
+	+ char** ptr = NULL (can tro den den de kiem tra cap phat bo nho thanh cong hay ko)
+	+ ptr = (char**)malloc(n * sizeof(char));  ((ptr vs (char**) vi ptr da khai bao la con tro cap 2)
+	n la so luong chuoi muon dung (vi du "fdffdfdsff", "sadasdsdasd --> n = 2)"
+	+ for(i = 0; i < n; i++)
+	{
+		ptr[i] = (char*)malloc(n * sizeof(char));
+	}
+	--> xong cap phat bo nho
+	thu hoi bo nho (free trong thu vein stdlib.h)
+	luu y: ko free prt[i] duoc, free(ptr) luc nay se giai phong duoc cac ptr[i] (kiem tra cac control nay se phai bang NULL)
+	sau do trong ptr = NULL
+************************************************************************
+
+
+********************* thay the ky tu trong chuoi ***********************
+- tim vi tri cua ki tu: *strchr (*str, 'ki tu can tim') vi du: pos = strchr(str, '\0'); tim thay -> pos != NULL
+*pos = 'ki tu can thay the'
+- khi su dung strncpy (* dest, *src, numOfByte); neu numOfByte lon hon chieu dai chuoi src --> chuoi src se bi sai (printf %s se ko con dung nua),
+ tuong tu voi memcpy, luc nay chuoi *dest con lai (cac ki tu con lai) se bi gan la NULL), ---> trong truong hop ko dat ta numOfByte nen dung strcpy, 
+ neu khong hay dung strlen(*src) thay cho numOfByte ,
+- nen check xem co ton tai '\0' trong chuoi hay chua
+
+- luu y: khi thao tac voi chuoi, co the dung strcmp, strncpy, strcpy, strncat ...
+tuy nhien khi co gan gia tri vao cho member cua struct da duoc khoi tao (hoac chua), luc nay ko thao tac voi chuoi nen ko the dung nhung lenh truoc do,
+phai dung memcpy, memset
+
+************************************************************************
+
+******** doc wifi credential da luu tren esp32 sau khi restart() *******
+- wifi credential duoc luu vao bo nho de dung o lan khoi dong tiep theo sau khi chay lenh esp_wifi_set_config() (khong tinh cac lenh phia truoc nhu trong vi du mau)
+ de lay tro ra, dung esp_wifi_get_config(), ham nay can duoc goi sau khi esp_wifi_init(&cfg) duoc chay (khoi tao cac thong so mac dinh cho wifi).
+
+
+************************************************************************
+
+*************** reset file da git add **********************************
+- file da git add, chua git commit: git reset [pathToFile]
+--> git checkout this file --> ok (git status de kiem tra)
+
+************************************************************************
+
+***************** dong goi code trong vim editor*************************
+- highlight cac dong muon dong goi --> zf, de mo dong foi : za (hoac zo, zc(!?))-> :mkview de luu dang file dong goi
+- khi luu va thoat khoi file, vao lai fie van se nhu binh thuong, de tai lai file 
+dang dong goi, go :loadview
+** de lam viec nay tu dong, them 2 dong vao .vimrc:
+    autocmd BufWinLeave *.* mkview
+    autocmd BufWinEnter *.* silent loadview
+
+************************************************************************
+
+
+**************** loi overflow in main task tren esp32 ******************
+- khi cap phat/ khoi tao object qua lon (>1024), nhung ko dat trong xTaskCreate(), khi chay se bi loi overflow stack,
+co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao trong 1 ham va xTaskCreate ham do
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
