@@ -248,11 +248,11 @@ static const char* wearLevellingStorageRead(char* fileName)
     unsigned char i = 0;
     while(fgets(&line, sizeof(line), fd) != NULL)
     {
-	for(int j = 0; j<=127; j++)
-	{
-	    multiline[i][j] = line[j];
-	}
-	i++;
+        for(int j = 0; j<=127; j++)
+        {
+            multiline[i][j] = line[j];
+        }
+        i++;
     }
 
     //ESP_LOGI(TAG, "first line: %s", multiline[0]);
@@ -604,6 +604,8 @@ static void uart_init(void)
     ESP_ERROR_CHECK(uart_param_config(uart_num, &uart_config));
     ESP_ERROR_CHECK(uart_set_pin(uart_num, 16, 17, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE));
 }
+
+
 ///uartWrite function
 static void uartWrite(char* dataWrite)
 {
