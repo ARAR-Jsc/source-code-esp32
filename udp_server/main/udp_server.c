@@ -33,6 +33,8 @@
 #include "driver/gpio.h"
 #include "esp_tls.h"
 #include "esp_http_client.h"
+#include "blufi_example_main.c"
+
 
 #define PORT CONFIG_EXAMPLE_PORT
 
@@ -278,7 +280,7 @@ static const char* wearLevellingStorageRead(char* fileName)
 
 
 ///wifi AP
-static void wifi_event_handler(void* arg, esp_event_base_t event_base,
+static void _wifi_event_handler_(void* arg, esp_event_base_t event_base,
                                     int32_t event_id, void* event_data)
 {
     if (event_id == WIFI_EVENT_AP_STACONNECTED) {
@@ -303,7 +305,7 @@ void wifi_init_softap(void)
 
     ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
                                                         ESP_EVENT_ANY_ID,
-                                                        &wifi_event_handler,
+                                                        &_wifi_event_handler_,
                                                         NULL,
                                                         NULL));
 
@@ -834,9 +836,10 @@ static void http_rest_with_url(void)
 void app_main(void)
 {
     printf("start ESP32 ......\n");
+    esp_err_t ret;
     ESP_ERROR_CHECK(nvs_flash_init());
 	////wifi_init_sta();
-    ////uart_init();
+    uart_init();
     ////uartReadWrite(dataWrite, dataRead);
     ////// blufi ////////////
     
@@ -866,11 +869,11 @@ void app_main(void)
     BLUFI_INFO("BLUFI VERSION %04x\n", esp_blufi_get_version());
 
     /////////////////////////
-    ////xTaskCreate(uartReadTask, "uartReadTask", 4096, NULL, 10, NULL);
-    ////vTaskDelay(500);
-    ////uartWrite("xin chao\n"); // uartWrite da on, nhung uartRead chua duoc (chua tra ve gia tri duoc, lam sao do khi task chay no se goi 1 ham khac)
-    ////////xTaskCreate(http_rest_with_url, "http_rest_with_url", 4096, NULL, 5, NULL);
-    ////http_rest_with_url();
+    xTaskCreate(uartReadTask, "uartReadTask", 4096, NULL, 10, NULL);
+    vTaskDelay(500);
+    uartWrite("xin chao\n"); // uartWrite da on, nhung uartRead chua duoc (chua tra ve gia tri duoc, lam sao do khi task chay no se goi 1 ham khac)
+    ////xTaskCreate(http_rest_with_url, "http_rest_with_url", 4096, NULL, 5, NULL);
+    http_rest_with_url();
     ////#ifdef CONFIG_EXAMPLE_IPV4
     ////    xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET, 5, NULL);
     ////#endif
