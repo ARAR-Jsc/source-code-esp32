@@ -68,7 +68,7 @@
 #define WEB_PORT "80"
 #define WEB_PATH "/"
 ////#define MAX_HTTP_OUTPUT_BUFFER 2048
-#define MAX_HTTP_OUTPUT_BUFFER 1024 /*if this value too large (>1024) it might cause stack overflow in task main --> reduce or put it in to xTaskCreate()*/
+#define MAX_HTTP_OUTPUT_BUFFER 1024
 /*end of defining for http_function*/
 
 static const char *TAG = "example";
@@ -835,19 +835,48 @@ void app_main(void)
 {
     printf("start ESP32 ......\n");
     ESP_ERROR_CHECK(nvs_flash_init());
-	wifi_init_sta();
-    uart_init();
+	////wifi_init_sta();
+    ////uart_init();
     ////uartReadWrite(dataWrite, dataRead);
-    xTaskCreate(uartReadTask, "uartReadTask", 4096, NULL, 10, NULL);
-    vTaskDelay(500);
-    uartWrite("xin chao\n"); // uartWrite da on, nhung uartRead chua duoc (chua tra ve gia tri duoc, lam sao do khi task chay no se goi 1 ham khac)
-    ////xTaskCreate(http_rest_with_url, "http_rest_with_url", 4096, NULL, 5, NULL);
-    http_rest_with_url();
-    #ifdef CONFIG_EXAMPLE_IPV4
-        xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET, 5, NULL);
-    #endif
-    #ifdef CONFIG_EXAMPLE_IPV6
-        xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET6, 5, NULL);
-    #endif
+    ////// blufi ////////////
+    
+    /////////////////////////
+    initialise_wifi();
+
+    ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT));
+
+    esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+    ret = esp_bt_controller_init(&bt_cfg);
+    if (ret) {
+        BLUFI_ERROR("%s initialize bt controller failed: %s\n", __func__, esp_err_to_name(ret));
+    }
+
+    ret = esp_bt_controller_enable(ESP_BT_MODE_BLE);
+    if (ret) {
+        BLUFI_ERROR("%s enable bt controller failed: %s\n", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    ret = esp_blufi_host_and_cb_init(&example_callbacks);
+    if (ret) {
+        BLUFI_ERROR("%s initialise failed: %s\n", __func__, esp_err_to_name(ret));
+        return;
+    }
+
+    BLUFI_INFO("BLUFI VERSION %04x\n", esp_blufi_get_version());
+
+    /////////////////////////
+    ////xTaskCreate(uartReadTask, "uartReadTask", 4096, NULL, 10, NULL);
+    ////vTaskDelay(500);
+    ////uartWrite("xin chao\n"); // uartWrite da on, nhung uartRead chua duoc (chua tra ve gia tri duoc, lam sao do khi task chay no se goi 1 ham khac)
+    ////////xTaskCreate(http_rest_with_url, "http_rest_with_url", 4096, NULL, 5, NULL);
+    ////http_rest_with_url();
+    ////#ifdef CONFIG_EXAMPLE_IPV4
+    ////    xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET, 5, NULL);
+    ////#endif
+    ////#ifdef CONFIG_EXAMPLE_IPV6
+    ////    xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET6, 5, NULL);
+    ////#endif
+    //////////////////////////
 
 }
