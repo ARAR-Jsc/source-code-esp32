@@ -67,7 +67,8 @@
 #define WEB_SERVER "example.com"
 #define WEB_PORT "80"
 #define WEB_PATH "/"
-#define MAX_HTTP_OUTPUT_BUFFER 2048
+////#define MAX_HTTP_OUTPUT_BUFFER 2048
+#define MAX_HTTP_OUTPUT_BUFFER 1024 /*if this value too large (>1024) it might cause stack overflow in task main --> reduce or put it in to xTaskCreate()*/
 /*end of defining for http_function*/
 
 static const char *TAG = "example";
@@ -748,9 +749,10 @@ static void http_rest_with_url(void)
         ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
     }
     ESP_LOG_BUFFER_HEX(TAG, local_response_buffer, strlen(local_response_buffer));
+    printf("show value of json string from httpbin.org: %s\n", local_response_buffer);
 
     // POST
-    const char *post_data = "{\"field1\":\"value1\"}";
+    const char *post_data = "{\"field1\":\"value1\", \"filed2\":\"value2\"}";
     esp_http_client_set_url(client, "http://httpbin.org/post");
     esp_http_client_set_method(client, HTTP_METHOD_POST);
     esp_http_client_set_header(client, "Content-Type", "application/json");
@@ -763,7 +765,18 @@ static void http_rest_with_url(void)
     } else {
         ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
     }
-
+    //get 2
+    err = esp_http_client_perform(client);
+    if (err == ESP_OK) {
+        ESP_LOGI(TAG, "HTTP GET Status = %d, content_length = %lld",
+                esp_http_client_get_status_code(client),
+                esp_http_client_get_content_length(client));
+    } else {
+        ESP_LOGE(TAG, "HTTP GET request failed: %s", esp_err_to_name(err));
+    }
+    ESP_LOG_BUFFER_HEX(TAG, local_response_buffer, strlen(local_response_buffer));
+    printf("show value 2 of json string from httpbin.org: %s\n", local_response_buffer);
+ 
     //PUT
     esp_http_client_set_url(client, "http://httpbin.org/put");
     esp_http_client_set_method(client, HTTP_METHOD_PUT);
@@ -814,6 +827,7 @@ static void http_rest_with_url(void)
     }
 
     esp_http_client_cleanup(client);
+    vTaskDelete(NULL);
 }
 //////
 
@@ -827,6 +841,8 @@ void app_main(void)
     xTaskCreate(uartReadTask, "uartReadTask", 4096, NULL, 10, NULL);
     vTaskDelay(500);
     uartWrite("xin chao\n"); // uartWrite da on, nhung uartRead chua duoc (chua tra ve gia tri duoc, lam sao do khi task chay no se goi 1 ham khac)
+    ////xTaskCreate(http_rest_with_url, "http_rest_with_url", 4096, NULL, 5, NULL);
+    http_rest_with_url();
     #ifdef CONFIG_EXAMPLE_IPV4
         xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET, 5, NULL);
     #endif
