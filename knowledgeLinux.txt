@@ -726,6 +726,22 @@ tao 1 .bb file trong helloworld voi noi dung nhu sau:
 
 ************************************************************************
 
+******************* tim hieu tool IDF **********************************
++++ cac file *.cmake duoc noi den nam o tool/cmake/ 
+
+- cac cai dat cua viec build source code deu nam trong ../tools/cmake/build.cmake
+- lenh tao file sdkconfig co nam trong ../tools/cmake/project.cmake (idf_build_process(${IDF_TARGET} la lenh do)
+file sdkconfig duoc tao ra boi dong nay trong file build.cmake (__kconfig_generate_config("${sdkconfig}" "${sdkconfig_defaults}")) --> 
+function(__kconfig_generate_config sdkconfig sdkconfig_defaults) (kconfig.cmake file) --> if(output_sdkconfig) (trong function(__kconfig_generate_config))
+
+***[sdkcongif.defaults]
+idf_build_process (project.cmake file) --> macro(idf_build_process) (build.cmake file)--> cmake_parse_arguments()(build.cmake file) --> 
+def main() (to initial empty array)(confgen.py file) --> __build_set_default(SDKCONFIG_DEFAULTS "") (build.cmake file) -->def main() confgen.py
+-----> se mo nhung file defaults tim thay trong cmake_dir --> copy vao file sdkconfig
+
+
+************************************************************************
+
 ****************** dieu khien gpio tren opipcplus **********************
 thanm khao: https://www.kernel.org/doc/Documentation/gpio/sysfs.txt
 
@@ -888,6 +904,14 @@ dang dong goi, go :loadview
 **************** loi overflow in main task tren esp32 ******************
 - khi cap phat/ khoi tao object qua lon (>1024), nhung ko dat trong xTaskCreate(), khi chay se bi loi overflow stack,
 co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao trong 1 ham va xTaskCreate ham do
+
+************************************************************************
+
+***************************** cmake ************************************
+- cach dump tin nhan trong cmake:
+    message(STATUS "") trong "" co the la chuoi hoac ten bien muon kiem tra gia tri ${}, ten bien phai nam trong {}
+
+************************************************************************
 
 
 
