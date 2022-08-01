@@ -913,6 +913,10 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
+******** find location of module abc (import abc) python  **************
+- cd den noi chua file impoet module --> chay python tuong ung len --> import imp --> imp.find_module('tenModule')
+************************************************************************
+
 
 
 
