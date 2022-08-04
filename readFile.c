@@ -26,22 +26,17 @@ int main()
 	
 	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    SetConsoleTextAttribute(hStdOut, (FOREGROUND_BLUE | BACKGROUND_GREEN));
-
-    printf("I'm BLUE ");
-
-    SetConsoleTextAttribute(hStdOut, (7 | 0)); // chu trang nen den (default)
-
-    printf("and I'm RED ");
-
-    SetConsoleTextAttribute(hStdOut, (BACKGROUND_GREEN));
-
-    printf("and we both have green background!\r\n");
+    //SetConsoleTextAttribute(hStdOut, (FOREGROUND_BLUE | BACKGROUND_GREEN));
+    //printf("I'm BLUE ");
+    //SetConsoleTextAttribute(hStdOut, (7 | 0)); // chu trang nen den (default)
+    //printf("and I'm RED ");
+    //SetConsoleTextAttribute(hStdOut, (BACKGROUND_GREEN));
+    //printf("and we both have green background!\r\n");
 	///////////////////
 	
 	
 	char line[20];
-    char array20[20][20];
+    char array20[20][20] = {0};
     int numberOfLine = 0;
     FILE *fd = fopen("dataFile.txt", "r");
     unsigned char breakWhile = 1;
@@ -55,9 +50,17 @@ int main()
 			{
 				//array20 = (char)line;
 				line[strlen(line) - 1] = '\0';
+				if(strcmp(line, array20[ii]) == 0)
+				{
+					printf("%s ", line);
+				}
+				else
+				{
+					SetConsoleTextAttribute(hStdOut, (6 | 0)); 
+					printf("%s ", line);
+					SetConsoleTextAttribute(hStdOut, (7 | 0)); // chu trang nen den (default)
+				}
 				strncpy(array20[ii], line, strlen(line));
-				printf("%s ", line);
-				strcpy(array20[ii], line);
 				numberOfLine ++;
 			}
 			else
@@ -66,6 +69,7 @@ int main()
 				break;
 			}
 		}
+		
 		printf("\n");
     }
     close(fd);
