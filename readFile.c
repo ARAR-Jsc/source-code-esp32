@@ -17,7 +17,7 @@ void reset()
 {
 	printf("\033[0m");
 }
-
+                
 int main()
 {
     	
@@ -41,6 +41,7 @@ int main()
     FILE *fd = fopen("dataFile.txt", "r");
     unsigned char breakWhile = 1;
     unsigned char ii = 0;
+    unsigned char j = 0;
     while(breakWhile)
     {
         
@@ -49,18 +50,36 @@ int main()
 			if(fgets(line, 20, fd) != NULL)
 			{
 				//array20 = (char)line;
-				line[strlen(line) - 1] = '\0';
+				//line[strlen(line) - 1] = '\0';
+				line[0] = line[2];
+				line[1] = line[3];
+				line[2] = '\0';
+				
+				////convert line to binary
+				for(j = 0; j < 2; j++)
+				{
+					if((line[j] == 'E') || (line[j] == 'F'))
+					{
+						line[j] = '1';
+					}
+					else if((line[j] == '0') || (line[j] == '8'))
+					{
+						line[j] = '0';
+					}
+				}
+				
+				///// apply color for changed line
 				if(strcmp(line, array20[ii]) == 0)
 				{
-					printf("%s ", line);
+					printf("%s   ", line);
 				}
 				else
 				{
 					SetConsoleTextAttribute(hStdOut, (6 | 0)); 
-					printf("%s ", line);
+					printf("%s   ", line);
 					SetConsoleTextAttribute(hStdOut, (7 | 0)); // chu trang nen den (default)
-				}
-				strncpy(array20[ii], line, strlen(line));
+				}	
+				strncpy(array20[ii], line, 2);
 				numberOfLine ++;
 			}
 			else
@@ -74,5 +93,6 @@ int main()
     }
     close(fd);
     printf("total line: %u\n", numberOfLine);
+    getchar();
     return 0;
 }
