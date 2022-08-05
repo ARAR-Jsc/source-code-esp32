@@ -860,6 +860,9 @@ link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-d
 	thu hoi bo nho (free trong thu vein stdlib.h)
 	luu y: ko free prt[i] duoc, free(ptr) luc nay se giai phong duoc cac ptr[i] (kiem tra cac control nay se phai bang NULL)
 	sau do trong ptr = NULL
+    ++luu y: con tro sau khi duco free se khong tu tro ve null, no tro toi vung nho khac (noi cac con tro xem nhu ko con)
+    ++kernel se cap phat page --> malloc se chia nho page do, cap phat khi chuong trinh can, page se khong duoc return cho 
+    den khi tat ca vung nhi da cap phat duoc giai phong
 ************************************************************************
 
 
