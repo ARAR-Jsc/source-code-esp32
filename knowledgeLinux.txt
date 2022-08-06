@@ -852,7 +852,8 @@ link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-d
 	+ char** ptr = NULL (can tro den den de kiem tra cap phat bo nho thanh cong hay ko)
 	+ ptr = (char**)malloc(n * sizeof(char));  ((ptr vs (char**) vi ptr da khai bao la con tro cap 2)
 	n la so luong chuoi muon dung (vi du "fdffdfdsff", "sadasdsdasd --> n = 2)"
-	+ for(i = 0; i < n; i++)
+	--> sai --> sua o duoi
+    + for(i = 0; i < n; i++)
 	{
 		ptr[i] = (char*)malloc(n * sizeof(char));
 	}
@@ -863,6 +864,11 @@ link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-d
     ++luu y: con tro sau khi duco free se khong tu tro ve null, no tro toi vung nho khac (noi cac con tro xem nhu ko con)
     ++kernel se cap phat page --> malloc se chia nho page do, cap phat khi chuong trinh can, page se khong duoc return cho 
     den khi tat ca vung nhi da cap phat duoc giai phong
+
+- cach cap phat vung nho dung con tro 2 chieu:
+    + cap phat vung nho cho con tro cap 2 voi, voi ham malloc, ta ep kieu ham malloc tuong ung voi kieu con tro, khi khai bao size,
+    phai dung saize cua con tro cap 1(tuc la giam di 1 bac)
+    o tren can sua lai: ptr = (char**)malloc(n * sizeof(cahr*)), nhu vay khi giai phong con tro se khong bi core dump
 ************************************************************************
 
 
@@ -918,6 +924,7 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ******** find location of module abc (import abc) python  **************
 - cd den noi chua file impoet module --> chay python tuong ung len --> import imp --> imp.find_module('tenModule')
+
 ************************************************************************
 
 
