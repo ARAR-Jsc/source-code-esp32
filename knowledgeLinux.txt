@@ -927,7 +927,8 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
-******** find location of module abc (import abc) python  **************
+******************* timer on esp32  ************************************
+
 - timer in esp32: (esp32 has 2 group, each group have 2 timer + 1 watchdog timer) --> 5 timer), timer legacy , gptimer with differences
 
  --> config --> init --> set_count_value  --> set_alarm_count --> enable intr --> add isr callback --> start time
@@ -943,7 +944,7 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
     xQueueReceive(A queue, *var, delay)  --> queue, address of var that get datat from xQueueSendFromISR in isr callback function, delay --> portMAX_DELAY
 
 ** IRAM_ATTR: when compiled, obvject wil be have one .dram.text section beside .text (instuction) and .data(data), when start up this section will be load into DRAM
-
+** TWDT task watchdog, defaults is availble in both CPU 0&1, if in while(true) not put vTaskDelay or vTaskDelete to reset WDT --> this will be cause hard-reset chip by WDT
 ************************************************************************
 
 

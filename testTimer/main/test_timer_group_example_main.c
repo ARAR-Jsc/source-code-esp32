@@ -4,6 +4,8 @@
 #include "freertos/queue.h"
 #include "esp_log.h"
 #include "driver/timer.h"
+#include "driver/gpio.h"
+#include "rom/gpio.h"
 
 static bool IRAM_ATTR timer_isr_callback(void *args)
 {
@@ -18,6 +20,13 @@ static bool IRAM_ATTR timer_isr_callback(void *args)
 
 void app_main()
 {
+    gpio_pad_select_gpio(23);
+    gpio_pad_select_gpio(22);
+    gpio_set_direction(23, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(23, GPIO_PULLUP_ONLY);
+    gpio_set_direction(22, GPIO_MODE_OUTPUT);
+    gpio_set_pull_mode(22, GPIO_PULLDOWN_ONLY);
+    gpio_set_level(22, 1);
     uint64_t getCountVal = 0;
     //create a queue
     QueueHandle_t uQueue = xQueueCreate(10, sizeof(QueueHandle_t)); //this queue contain 10 message
@@ -57,5 +66,18 @@ void app_main()
     timer_deinit(group, timer);
     vQueueDelete(uQueue);
     printf("End of app_main\n");
+    unsigned char checkWDT = 1;
+    while(checkWDT)
+    {
+	if(gpio_get_level(23) == 0)
+	{
+	   while(gpio_get_level(23) == 0);
+	   gpio_set_level(22, 0);
+	   vTaskDelay(1000/portMAX_DELAY);
+	   checkWDT = (!(checkWDT) & 0x01);
+
+	}	
+	vTaskDelete(NULL);
+    }
 }
 
