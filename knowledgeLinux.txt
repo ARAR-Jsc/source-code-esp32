@@ -927,7 +927,24 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
+******** find location of module abc (import abc) python  **************
+- timer in esp32: (esp32 has 2 group, each group have 2 timer + 1 watchdog timer) --> 5 timer), timer legacy , gptimer with differences
 
+ --> config --> init --> set_count_value  --> set_alarm_count --> enable intr --> add isr callback --> start time
+ --> check xQueueReceive
+
+    timer_config_t config (*note clk_src : TIMER_SRC_CLK_DEFAULT, others can be found at library)
+    timer_init(group, time)
+    timer_set_counter_value(group, timer, value)
+    timer_set_alarm_value(group, timer, value)
+    timer_enable_intr(group, timer)
+    timer_isr_callback_add(group, timer, callback function (user define), *argument of callbackfuntion, intr_flag), if argument of callbackfunction: queue --> queue not &queue)
+    timer_start(group, timer)
+    xQueueReceive(A queue, *var, delay)  --> queue, address of var that get datat from xQueueSendFromISR in isr callback function, delay --> portMAX_DELAY
+
+** IRAM_ATTR: when compiled, obvject wil be have one .dram.text section beside .text (instuction) and .data(data), when start up this section will be load into DRAM
+
+************************************************************************
 
 
 
