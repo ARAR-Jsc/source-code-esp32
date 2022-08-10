@@ -945,9 +945,22 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ** IRAM_ATTR: when compiled, obvject wil be have one .dram.text section beside .text (instuction) and .data(data), when start up this section will be load into DRAM
 ** TWDT task watchdog, defaults is availble in both CPU 0&1, if in while(true) not put vTaskDelay or vTaskDelete to reset WDT --> this will be cause hard-reset chip by WDT
+** vTaskDelay(10/portMAX_DELAY) --> won't reset watchdog timer due to smallest scales --> no delay --> must be  > 100,
+   replace portMAX_DELAY by portTICK_PEROID_MS will be OK due to smallst scale is 10 ms 
+
 ************************************************************************
 
+*********** gpio external interrupt on esp32 ***************************
+- config pin wan to use as interrupt ( input, pullup, active at negative edge)
+  --> config as non-shared interrupt (gpio_install_isr_service(0) (soc/esp32/include/soc/soc.h)
+  --> enable interrupt (gpio_intr_enable(num pin)
+  --> ping to interrupt handle(gpio_isr_handler_add(pin, function, argument of "function")
 
+---
+**note ////vTaskDelete(NULL); this line will be cause stop program at this line (due to this function is not called as a Task), not run conutinue (just task is run before this line can active again)
+
+
+************************************************************************
 
 
 

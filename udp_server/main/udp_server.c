@@ -829,13 +829,82 @@ static void http_rest_with_url(void)
     }
 
     esp_http_client_cleanup(client);
-    vTaskDelete(NULL);
+    ////vTaskDelete(NULL); this line will be cause stop program at this line (due to this function is not called as a Task), not run conutinue (just task is run before this line can active again)
 }
 //////
+
+//
+bool status = true;
+static void ext_isr_handler(void *args)
+{
+    status = !status & 0x01;
+    gpio_set_level(22, status);
+}
+
+bool status2 = true;
+static void ext_isr_handler2(void *args)
+{
+    status2 = !status2 & 0x01;
+    gpio_set_level(21, status2);
+}
+
+
+static void interrupt(void * pvParameter)
+{
+    //enable interrupt sevice
+    gpio_install_isr_service(0); //config as non_share interrupt
+    //enable interrupt
+    ESP_ERROR_CHECK(gpio_intr_enable(23));
+    //config interrupt type
+    ESP_ERROR_CHECK(gpio_set_intr_type(23, GPIO_INTR_NEGEDGE));
+    //add interrupt handler
+    ESP_ERROR_CHECK(gpio_isr_handler_add(23, ext_isr_handler, NULL));
+    
+    ESP_ERROR_CHECK(gpio_intr_enable(19));
+    //config interrupt type
+    ESP_ERROR_CHECK(gpio_set_intr_type(19, GPIO_INTR_NEGEDGE));
+    //add interrupt handler
+    ESP_ERROR_CHECK(gpio_isr_handler_add(19, ext_isr_handler2, NULL));
+    while(1)
+    {
+	vTaskDelay(10/portTICK_PERIOD_MS);
+    }
+}
+
+////static void interrupt2(void * pvParameter)
+////{
+////    //enable interrupt sevice
+////    gpio_install_isr_service(0); //config as non_share interrupt
+////    //enable interrupt
+////    ESP_ERROR_CHECK(gpio_intr_enable(19));
+////    //config interrupt type
+////    ESP_ERROR_CHECK(gpio_set_intr_type(19, GPIO_INTR_NEGEDGE));
+////    //add interrupt handler
+////    ESP_ERROR_CHECK(gpio_isr_handler_add(19, ext_isr_handler2, NULL));
+////    while(1)
+////    {
+////	vTaskDelay(10/portTICK_PERIOD_MS);
+////    }
+////}
 
 void app_main(void)
 {
     printf("start ESP32 ......\n");
+    
+    //config gpio
+    gpio_pad_select_gpio(23);
+    gpio_pad_select_gpio(22);
+    gpio_pad_select_gpio(21);
+    gpio_pad_select_gpio(19);
+    gpio_set_direction(23, GPIO_MODE_INPUT);
+    gpio_set_direction(22, GPIO_MODE_OUTPUT);
+    gpio_set_direction(21, GPIO_MODE_OUTPUT);
+    gpio_set_direction(19, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(23, GPIO_PULLUP_ONLY);
+    gpio_set_pull_mode(22, GPIO_PULLDOWN_ONLY);
+    gpio_set_pull_mode(21, GPIO_PULLDOWN_ONLY);
+    gpio_set_pull_mode(19, GPIO_PULLUP_ONLY);
+
     esp_err_t ret;
     ESP_ERROR_CHECK(nvs_flash_init());
 	////wifi_init_sta();
@@ -880,6 +949,8 @@ void app_main(void)
     ////#ifdef CONFIG_EXAMPLE_IPV6
     ////    xTaskCreate(udp_server_task, "udp_server", 4096, (void*)AF_INET6, 5, NULL);
     ////#endif
-    //////////////////////////
+    /////////////////////////
+    xTaskCreate(interrupt, "interrupt", 2048, NULL, 8, NULL);
+    ////xTaskCreate(interrupt2, "interrupt2", 2048, NULL, 8, NULL);
 
 }
