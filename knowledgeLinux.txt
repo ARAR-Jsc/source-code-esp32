@@ -929,6 +929,8 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ******************* timer on esp32  ************************************
 
+[[[legacy timer  -- user control individual timer by group, timer]]]
+
 - timer in esp32: (esp32 has 2 group, each group have 2 timer + 1 watchdog timer) --> 5 timer), timer legacy , gptimer with differences
 
  --> config --> init --> set_count_value  --> set_alarm_count --> enable intr --> add isr callback --> start time
@@ -947,6 +949,11 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 ** TWDT task watchdog, defaults is availble in both CPU 0&1, if in while(true) not put vTaskDelay or vTaskDelete to reset WDT --> this will be cause hard-reset chip by WDT
 ** vTaskDelay(10/portMAX_DELAY) --> won't reset watchdog timer due to smallest scales --> no delay --> must be  > 100,
    replace portMAX_DELAY by portTICK_PEROID_MS will be OK due to smallst scale is 10 ms 
+
+^^^^^^^^^
+
+[[[gptimer -- user no need (can not) control individual timer, this work is done by driver, user just instance timer by gptimer_handle_t pointer]]]
+- when use gptimer_config_t, if we don't set intr_share flags, it's default is intr_share, share interrupt can not work with edge trigger
 
 ************************************************************************
 
