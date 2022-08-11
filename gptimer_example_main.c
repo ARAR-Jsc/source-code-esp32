@@ -16,6 +16,22 @@ static void timer_alarm_callback(void)
 /* to del_timer, need disable timer before del_timer*/
 
 
+typedef struct {
+    uint64_t event_count;
+}example_queue_element_t;
+
+static bool IRAM_ATTR timer_isr_callback(gptimer_handle_t timer, const gptimer_alarm_event_data_t *edata, void *user_ctx)
+{
+    BaseType_t high_task_awoken = pdFALSE;
+    QueueHandle_t queue = (QueueHandle_t)user_ctx;
+    example_queue_element_t evt = {
+	.event_count = edata->count_value,
+    };
+    xQueueSendFromISR(queue, &evt, &high_task_awoken);
+    return high_task_awoken == pdTRUE;  //return 1 if == is true, other if  == false , note true != 0 , false = 0
+}
+
+
 void app_main()
 {
     //config gp timer
@@ -25,6 +41,7 @@ void app_main()
 
 
     ////
+    QueueHandle_t queue = xQueueCreate(10, sizeof(example_queue_element_t)); //due to queue store data for this type
     gptimer_handle_t gptimer = NULL;
     gptimer_config_t config = {
 	.clk_src = GPTIMER_CLK_SRC_DEFAULT,
@@ -38,18 +55,24 @@ void app_main()
     // set alarm action
     gptimer_alarm_config_t alarm_config = {
 	.alarm_count = 1000000,
-	.reload_count = 0,
+	.reload_count = 23,
 	.flags.auto_reload_on_alarm = 1,
     };
     ESP_ERROR_CHECK(gptimer_set_alarm_action(gptimer, &alarm_config));
     
     //timer callback
+    ////gptimer_event_callbacks_t event_callbacks = {
+    ////    .on_alarm =  timer_alarm_callback,
+    ////};
     gptimer_event_callbacks_t event_callbacks = {
-	.on_alarm =  timer_alarm_callback,
+	.on_alarm =  timer_isr_callback,
     };
-    ESP_ERROR_CHECK(gptimer_register_event_callbacks(gptimer, &event_callbacks, NULL));
-
+    ////ESP_ERROR_CHECK(gptimer_register_event_callbacks(gptimer, &event_callbacks, queue));
+    ESP_ERROR_CHECK(gptimer_register_event_callbacks(gptimer, &event_callbacks, queue));
+    uint64_t getCount;
     //enable timer
     ESP_ERROR_CHECK(gptimer_enable(gptimer));
     ESP_ERROR_CHECK(gptimer_start(gptimer));
+    xQueueReceive(queue, &getCount , 20/portTICK_PERIOD_MS);
+    printf("Dump value of counter: %llu\n", getCount);
 }
