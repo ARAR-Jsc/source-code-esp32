@@ -2,21 +2,26 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
-#include "driver/gptimer"
+#include "driver/gptimer.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
 
+bool status = true;
 static void timer_alarm_callback(void)
 {
-    
+   status = !status & 0x01;
+   gpio_set_level(18, status); 
 }
 
+/* to del_timer, need disable timer before del_timer*/
 
 
-static void app_main()
+void app_main()
 {
     //config gp timer
     gpio_pad_select_gpio(18);
+    gpio_set_direction(18, GPIO_MODE_OUTPUT);
+    gpio_set_pull_mode(18, GPIO_PULLDOWN_ONLY);
 
 
     ////
@@ -32,7 +37,7 @@ static void app_main()
     ESP_ERROR_CHECK(gptimer_set_raw_count(gptimer, 0));
     // set alarm action
     gptimer_alarm_config_t alarm_config = {
-	.alarm_count = 500000,
+	.alarm_count = 1000000,
 	.reload_count = 0,
 	.flags.auto_reload_on_alarm = 1,
     };
@@ -42,5 +47,9 @@ static void app_main()
     gptimer_event_callbacks_t event_callbacks = {
 	.on_alarm =  timer_alarm_callback,
     };
-    ESP_ERROR_CHECK(gptimer_register_event_callbacks(gptimer, &event_callbacks));
+    ESP_ERROR_CHECK(gptimer_register_event_callbacks(gptimer, &event_callbacks, NULL));
+
+    //enable timer
+    ESP_ERROR_CHECK(gptimer_enable(gptimer));
+    ESP_ERROR_CHECK(gptimer_start(gptimer));
 }
