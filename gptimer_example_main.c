@@ -25,9 +25,9 @@ static bool IRAM_ATTR timer_isr_callback(gptimer_handle_t timer, const gptimer_a
     BaseType_t high_task_awoken = pdFALSE;
     QueueHandle_t queue = (QueueHandle_t)user_ctx;
     example_queue_element_t evt = {
-	.event_count = edata->count_value,
+    .event_count = edata->count_value,
     };
-    xQueueSendFromISR(queue, &evt, &high_task_awoken);
+    xQueueSendToBackFromISR(queue, &evt, &high_task_awoken);
     return high_task_awoken == pdTRUE;  //return 1 if == is true, other if  == false , note true != 0 , false = 0
 }
 
@@ -55,7 +55,7 @@ void app_main()
     // set alarm action
     gptimer_alarm_config_t alarm_config = {
 	.alarm_count = 1000000,
-	.reload_count = 23,
+	.reload_count = 0,
 	.flags.auto_reload_on_alarm = 1,
     };
     ESP_ERROR_CHECK(gptimer_set_alarm_action(gptimer, &alarm_config));
@@ -73,6 +73,7 @@ void app_main()
     //enable timer
     ESP_ERROR_CHECK(gptimer_enable(gptimer));
     ESP_ERROR_CHECK(gptimer_start(gptimer));
-    xQueueReceive(queue, &getCount , 20/portTICK_PERIOD_MS);
+    xQueueReceive(queue, &getCount , 40000/portTICK_PERIOD_MS);
+    ////xQueueReceive(queue, &getCount , pdMS_TO_TICKS(2000));
     printf("Dump value of counter: %llu\n", getCount);
 }
