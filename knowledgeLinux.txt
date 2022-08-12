@@ -970,6 +970,15 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 ************************************************************************
 
 
+************ dump kernel message when boot to serial port **************
+
+    [[[with ubuntu  Xenial 16.04 (legacy) from github.com/orangepi-sunxi/orangepi-build
+- run build.sh --> buils full OS --> enable early printk in Kernel Hacking, change Kernel command line type to Extend bootloader kernel arguments --> save --> countinue compiling
+
+
+************************************************************************
+
+
 
 
 
