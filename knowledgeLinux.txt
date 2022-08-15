@@ -647,6 +647,11 @@ repo: https://github.com/Halolo/orange-pi-distro
     sudo apt install liblzma-dev lzma
 --> sau do cai dat lai python ban mong muon (bi loi nay nay khi cai dat idf lap trnh cho esp32
 
+- fix loi khong thay _sqlite3 module:
+    + install sqlite3: sudo apt install libsqlite3-dev 
+    --> cd to python install folder (locate configure file)
+    --> run ./configure --enable-loadable-sqlite-extensions --enable-optimizations --> sudo make --> sudo make install --> ok (test: import sqlite3)
+
 ************************************************************************
 
 *********** cach them ung dung  vao image tren yocto *******************
