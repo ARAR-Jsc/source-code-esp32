@@ -105,6 +105,9 @@ s:password (nhap password duoi dang ma ASCII)
    - ket noi toi diem wifi:
       + sudo -s de cho biet cac hoat dong sau do se duoc chay o root
 
+[[connect wifi on orangepi via putty serial]]
+    - nmcli radio wifi on --> nmcli d wifi connect SSID password pws   (SSID: abcbc edsd   --->    abcbc\ edsd)
+
 
 ************************************************************************
 
@@ -978,8 +981,11 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 ************ dump kernel message when boot to serial port **************
 
     [[[with ubuntu  Xenial 16.04 (legacy) from github.com/orangepi-sunxi/orangepi-build
-- run build.sh --> buils full OS --> enable early printk in Kernel Hacking, change Kernel command line type to Extend bootloader kernel arguments --> save --> countinue compiling
+- run build.sh --> buils full OS --> enable early printk (CONFIG_EARLY_PRINTK) in Kernel Hacking, change Kernel command line type to Extend bootloader kernel arguments 
+(CONFIG_CMDLINE_EXTEND) --> save --> countinue compiling
 
+[[[ with kernel mainline (ubuntu 20), copy CMDLINE from .config of legacy 16 to external/config/kernel/linux-sunxi-current.config --> khi run ./build.sh a choice will be show
+on terminal, can show kernel to serial but stuck at waiting UUID --> not finish starting kernel 
 
 ************************************************************************
 
