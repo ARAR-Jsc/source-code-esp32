@@ -990,6 +990,25 @@ on terminal, can show kernel to serial but stuck at waiting UUID --> not finish 
 ************************************************************************
 
 
+*************** setup to clone repo from bitbucket.org *****************
+[[[tham khao  https://support.atlassian.com/bitbucket-cloud/docs/clone-a-repository/
+
+- setup ssh key
+    + run ssh-keygen ->enter --> enter the bitbucket's password --> enter (appear id_rsa id_rsa.pub in ~/.ssh/: ok)
+    + start the agent: eval `ssh-agent` --> ssh-add ~/.ssh/<private_key_file>
+    + add public key: copy content of id_rsa.pub to bitbucket web (avatar --> personal setting --> SSS keys --> add key --> save)
+    + check: ssh -T git@bitbucket.org: You...Bitbucket. Shell...disable  --> success
+- Install git credential manager:
+    + download: https://github.com/GitCredentialManager/git-credential-manager/releases/tag/v2.0.785 
+    + install: sudo dpkg -i <path to package> --> git-credential-manager-core configure --> new terminal
+    + clone repo command --> enter password of bitbucket or password when create ssh key-gen
+
+
+[[[for github ]]] 
+    https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+************************************************************************
+
+
 
 
 
