@@ -629,6 +629,8 @@ repo: https://github.com/Halolo/orange-pi-distro
     + FuncFailed not attribute of ... (checkout lich su thay doi cua file bitbake/lib/bb/Build.py (git log --follow -p path_to_file) ---> copy ve
     (tot nhat hay checkout nhu buoc o tren de tranh cac loi)
 
+- create sdk : cd  ./build ---> MACHINE=orange-pi-pc-plus bitbake opipcplus-minimal -c populate_sdk 
+
 ************************************************************************
 
 **************** cach tao SDcard bootable opipcplus ********************
@@ -822,8 +824,49 @@ se dan den ca 2 thiet bi cung ko the truy cap duoc (du truoc do 1 trong 2 thiet 
 ************************************************************************
 
 ****************** compile and install cmake ***************************
+- download from terminal
+    version=3.23 //change version
+    build=2
+    ## don't modify from here
+    mkdir ~/temp
+    cd ~/temp
+    wget https://cmake.org/files/v$version/cmake-$version.$build.tar.gz
+    tar -xzvf cmake-$version.$build.tar.gz
+    cd cmake-$version.$build/
+
+
 - download source code from cmake.org/files/vx.xx/cmake-x.xx.0-rc2.tar.xz (file nay moi co bootstrap, khong phai clone tu https://github.com/Kitware/CMake
-- ./bootstrap --> make -j$(nproc) --> sudo make install (loi khong thay compiler ho tro c++11 --> tuc la dang thieu g++, sudo apt install g++ la duoc
+- compile and install: ./bootstrap --> make -j$(nproc) --> sudo make install (loi khong thay compiler ho tro c++11 --> tuc la dang thieu g++, sudo apt install g++ la duoc
+
+=========
+
+- cach dump tin nhan trong cmake:
+    message(STATUS "") trong "" co the la chuoi hoac ten bien muon kiem tra gia tri ${}, ten bien phai nam trong {}
+
+- cach them library to linking: use CUSTOMISED_LIBS, ex:
+    set(CUSTOMISED_LIBS
+	pthread
+	sqlite3
+	asound
+	stdc++fs
+	${DLT_LIBRARIES} --> this is var of cmake
+    )
+- fix undefined referrence to ... when change filesystem --> experimental/filesystem: add stdc++fs to link library list
+
+
+==== tham khao https://cmake.org/cmake/help/v3.17/guide/tutorial/index.html
+- # add library
+    add_library(MathFunctions mysqrt.cxx)
+  # add linking library
+    target_link_libraries(Tutorial PUBLIC MathFunctions)
+  # add the binary tree to the search path for include files
+  # so that we will find TutorialConfig.h
+    target_include_directories(Tutorial PUBLIC
+                          "${PROJECT_BINARY_DIR}"
+                          "${PROJECT_SOURCE_DIR}/MathFunctions"
+                          )
+
+
 ************************************************************************
 
 ***************** dot (.) in meber of struct ***************************
@@ -924,11 +967,6 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
-***************************** cmake ************************************
-- cach dump tin nhan trong cmake:
-    message(STATUS "") trong "" co the la chuoi hoac ten bien muon kiem tra gia tri ${}, ten bien phai nam trong {}
-
-************************************************************************
 
 ******** find location of module abc (import abc) python  **************
 - cd den noi chua file impoet module --> chay python tuong ung len --> import imp --> imp.find_module('tenModule')
@@ -1006,9 +1044,21 @@ on terminal, can show kernel to serial but stuck at waiting UUID --> not finish 
 
 [[[for github ]]] 
     https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
 ************************************************************************
 
+************************* switch two gcc *******************************
+-   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.3 10 (10 is prior level)
+ --> sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.3 10
+ 
+ --> sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+ --> sudo update-alternatives --set cc /usr/bin/gcc
 
+ --> sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+ --> sudo update-alternatives --set c++ /usr/bin/g++
+
+ --> sudo update-alternatives --config gcc (change "cc" if "gcc" get error)
+************************************************************************
 
 
 
