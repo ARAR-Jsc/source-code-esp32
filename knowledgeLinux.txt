@@ -1022,8 +1022,12 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 - run build.sh --> buils full OS --> enable early printk (CONFIG_EARLY_PRINTK) in Kernel Hacking, change Kernel command line type to Extend bootloader kernel arguments 
 (CONFIG_CMDLINE_EXTEND) --> save --> countinue compiling
 
-[[[ with kernel mainline (ubuntu 20), copy CMDLINE from .config of legacy 16 to external/config/kernel/linux-sunxi-current.config --> khi run ./build.sh a choice will be show
-on terminal, can show kernel to serial but stuck at waiting UUID --> not finish starting kernel 
+[[[ with kernel mainline (ubuntu 20), (CMDLINE from external/config/kernel/linux-sunxi-current.config) 
+- enable EARLYPRINTK from linux-sunxi-current.config (or from menuconfig), 
+- CONFIG_CMDLINE no need to change it
+- in boot-sunxi.cmd(in external/config/bootscript folder), add init=/init to endof bootargs --> remove "hdmi.audio=EDID:0 disp.screen0_output_mode=${disp_mode}" in bootargs
+  --> change loglevel to 7 (dump message to log of 1->7 level) by modifile verbosity in boot-sunxi.cmd and sunxi.txt in external/config/bootenv
+  --> remove console=tty0 from "...console=ttyS0,115200 console=tty0"
 
 ************************************************************************
 
