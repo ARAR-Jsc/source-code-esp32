@@ -631,6 +631,10 @@ repo: https://github.com/Halolo/orange-pi-distro
 
 - create sdk : cd  ./build ---> MACHINE=orange-pi-pc-plus bitbake opipcplus-minimal -c populate_sdk 
 
+- dump message in yocto recipe
+    + add logging lib to recipe (.bb) : inherit logging (poky/meta/classes/logging.bbclass)
+    + use bbwarn "message wanna show"   (bbwarn, bberror, bbnote)
+
 ************************************************************************
 
 **************** cach tao SDcard bootable opipcplus ********************
