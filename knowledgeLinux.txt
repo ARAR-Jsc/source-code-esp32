@@ -407,13 +407,15 @@ spl/sunxi-spl.bin neu ko bi loi.
 	(dung o sunxi-boards, chay fex2bin o sunxi_tools, 
 	xunlong_orange_pi_pc_plus.fex o sunxi-boards/sys_config/h3/)
 3) build the kernel:
+
+** Note: use -j$(nproc) not -j${nproc} --> cause outof mem in < 1 mins, to specify number of CPU
 - clone kernel source code: github.com/orangepi-xunlong/linux-orangepi.git
 - set default kernel config:
-	make ARCH=arm, CROSS_COMPILE=arm-linux-gnueabihf- orangepi_defconfig (hoac sunxi_defconfig cung duoc)
+	make ARCH=arm, CROSS_COMPILE=arm-linux-gnueabihf- sunxi_defconfig (dung orangepi_defconfig se bi loi)
 - make to change kernel config (optional):
 	make ARCH=arm, CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
 - make the uImage and modules (o buoc nay se bi loi( nhu "loi khi build kernel" o tren + cach fix):
-	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- uImage modules
+	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- uImage modules -j$(nproc)
 - make full module tree:
 	make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=output modules_install
 --> cac file duoc tao: uImage (arch/arm/boot/), output/lib/modules/x.x...
@@ -565,6 +567,9 @@ sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin writ
     set directory=$HOME/.vim/swapfiles//
 - tao shortcut voi env desktop ko co show desktop command: install wmctrl, tao 1 scritp trong /usr/bin (de cho de gan lenh trong phan tao shortcut mac dinh)
 dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
+
+- set foldcloumn=0 to turn off gray bar in leftside in vim
+
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
 	#!/bin/bash
