@@ -348,6 +348,9 @@ khi chay lenh sudo apt/update (do do hay bo qua loi nay khi update he thong)
 ************************************************************************
 
 ************** copy file tu may duoc access thong qua ssh **************
+
+^^^must open new terminal^^^
+
 - scp dia chi file (o may cua minh) user@ip_address:/folder_destination/ (cua may duoc access thong qua ssh)
 v.d:
 scp /home/hello/Desktop/findScriptToFlashEMMC/OrangePi-BuildLinux/install_to_emmc  root@192.168.100.10:/home/orangepi
