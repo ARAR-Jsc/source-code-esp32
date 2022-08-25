@@ -570,6 +570,11 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
 - set foldcloumn=0 to turn off gray bar in leftside in vim
 
+- list all version of GLIBC: strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBC
+- update to get GLIBCX_3.4.26 for ubuntu18:
+    + sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+    + sudo apt update
+    + sudo apt upgrade
 
 +++++++++++++++++++++++++++++++++++++++++++++++++
 	#!/bin/bash
