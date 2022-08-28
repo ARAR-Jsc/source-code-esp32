@@ -286,6 +286,14 @@ tu lenh chay: make evb-rk3399_defconfig (vidu)
 
 - khi make thuc hien viec include file theo Makefile, neu co file nao ko duoc tim thay, make se tam thoi bo qua, tiep tuc include sau do se quay lai include nhung file ko tim thay 1 lan nua, neu van khong thay -> dump fatal error va thoat. De buoc make ko tao fatal error trong truong hop nay co1 the dung, -include hoac sinclude command
 
+- dump message trong Makefile: $(info "noi dung can in ra man hinh")
+
+- fix undefined referrence to ... when change filesystem --> experimental/filesystem: add stdc++fs to link library list
+
+- make -C ./path_to_build_folder    (tuc la tro toi thu muc chua Makefile, va build moi thu o trong thu muc do)
+
+
+
 ************************************************************************
 
 
@@ -872,8 +880,8 @@ se dan den ca 2 thiet bi cung ko the truy cap duoc (du truoc do 1 trong 2 thiet 
 	stdc++fs
 	${DLT_LIBRARIES} --> this is var of cmake
     )
-- fix undefined referrence to ... when change filesystem --> experimental/filesystem: add stdc++fs to link library list
 
+- cmake -S path_source_file (chua CMakeLists.txt) -B path_build_folder (chua Makefile duoc gen boi cmake)
 
 ==== tham khao https://cmake.org/cmake/help/v3.17/guide/tutorial/index.html
 - # add library
@@ -1084,6 +1092,47 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
  --> sudo update-alternatives --config gcc (change "cc" if "gcc" get error)
 ************************************************************************
+
+
+********** cac buoc build c/c++ thanh file executable ******************
+-             |.c file (precessor: #include, #if..., strip out comment
+    compiler  |--> .s file (assembly file)
+              |--> .o (object file)
+
+    linker     .o --> executable file 
+
+- Note: trong source code, khi compile, compiler chi can kiem tra khai bao ham (nguyen mau ham), dinh nghia cua ham duoc kiem tra (co hay ko) boi linker
+ --> dieu nay can thiet khi su dung cmake de them thu vien (trong CMakeLists.txt)
+
+
+
+
+************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
