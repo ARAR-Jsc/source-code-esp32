@@ -1104,7 +1104,10 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 - Note: trong source code, khi compile, compiler chi can kiem tra khai bao ham (nguyen mau ham), dinh nghia cua ham duoc kiem tra (co hay ko) boi linker
  --> dieu nay can thiet khi su dung cmake de them thu vien (trong CMakeLists.txt)
 
-
+- Note:  executable va shared object deu la file co the chay duoc, executable khong can them bat cu gi nua de chay, shared object can co thu vien de link (run time lib)
+	--> executable: co dia chi offset co dinh: 0x08048000 for i386, 0x00400000 for x86 and 0x00010000 for arm.
+	--> shared object khong co offset co dinh (su dung: using address space layout randomization (ASLR))
+	--> to compile executable from c/c++ file : add -no-pie to gcc when compile source code (mac dinh la -pie --> shared object thay vi executable)
 
 
 ************************************************************************
