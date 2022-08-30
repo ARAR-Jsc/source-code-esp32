@@ -690,11 +690,22 @@ repo: https://github.com/Halolo/orange-pi-distro
 ************************************************************************
 
 
-********* install sqlite3 for arm-linux-gnueabihf-gcc ******************
+********* install sqlite3, libasound for arm-linux-gnueabihf-gcc ******************
 
-- download: wget http://www.sqlite.org/2017/sqlite-autoconf-3160200.tar.gz --> tar -xvf pathToFile --> cd to this folder
+tham khao https://medium.com/geekculture/start-using-the-sqlite-database-while-programming-with-c-on-beaglebone-black-arm-and-embedded-809e5eea2a21
+          https://www.alsa-project.org/pipermail/alsa-devel/2009-October/021902.html
+-sqlite3
+
+    + download: wget http://www.sqlite.org/2017/sqlite-autoconf-3160200.tar.gz --> tar -xvf pathToFile --> cd to this folder
     --> sudo ./configure CC=/Compilers/sqlite3  --prefix=/usr/bin/arm-linux-gnueabihf-gcc
     --> sudo make --> sudo make install
+
+-libasound:
+    + download: https://fossies.org/linux/misc/alsa-lib-1.2.7.2.tar.bz2/
+    --> CC=arm-linux-gnueabihf-gcc ./configure --target=arm-linux --host=x86_64-linux
+    --> sudo make
+    --> sudo make install
+    (vi tri cai dat: alsa... /src/.libs)
 
 ************************************************************************
 
