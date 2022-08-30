@@ -605,7 +605,7 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 - fix : no code MPEG-4 AAC:
     sudo apt install libdvdnav4 libdvdread4 gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libdvd-pkg
 
-- remove lock symbol in folder: sudo apt install chown -R $USER: $HOME
+- remove lock symbol in folder: sudo chown -R $USER: $HOME
 
 ************************************************************************
 
@@ -688,6 +688,18 @@ repo: https://github.com/Halolo/orange-pi-distro
     --> run ./configure --enable-loadable-sqlite-extensions --enable-optimizations --> sudo make --> sudo make install --> ok (test: import sqlite3)
 
 ************************************************************************
+
+
+********* install sqlite3 for arm-linux-gnueabihf-gcc ******************
+
+- download: wget http://www.sqlite.org/2017/sqlite-autoconf-3160200.tar.gz --> tar -xvf pathToFile --> cd to this folder
+    --> sudo ./configure CC=/Compilers/sqlite3  --prefix=/usr/bin/arm-linux-gnueabihf-gcc
+    --> sudo make --> sudo make install
+
+************************************************************************
+
+
+
 
 *********** cach them ung dung  vao image tren yocto *******************
 - trong meta- chinh dang compile (ko tinh poky), them recipes de chua source code: recipes-xxx/helloworld/file/src   (file/src do trong .bb file:://src <--> /file/src/)
