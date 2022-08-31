@@ -697,15 +697,39 @@ tham khao https://medium.com/geekculture/start-using-the-sqlite-database-while-p
 -sqlite3
 
     + download: wget http://www.sqlite.org/2017/sqlite-autoconf-3160200.tar.gz --> tar -xvf pathToFile --> cd to this folder
-    --> sudo ./configure CC=/Compilers/sqlite3  --prefix=/usr/bin/arm-linux-gnueabihf-gcc
+    --> sudo ./configure CC=/usr/bin/arm-linux-gnueabihf-gcc  --prefix=/usr/
     --> sudo make --> sudo make install
+    voi configure nhu tren, libasound se duoc cai o /usr/local/lib sau khi chay sudo make install, khi su dung voi cmake, mac dinh se khong co /usr/local/lib trong link directory,
+    de tim duoc libsqlite3, su dung find_library va target_link_libraries (vi du duoi day se dung bien tao boi find_library trong mot ham khac)
+
+##            find_library(SQLITE sqlite3 HINTS /usr/local/lib)
+##
+##            set(CUSTOMISED_LIBS
+##                pthread
+##                #/Compilers/SQLite_for_ARM/lib/libsqlite3.a
+##                #sqlite3
+##                asound
+##                stdc++fs
+##                ${SQLITE}
+##                ${DLT_LIBRARIES}
+##            )
+
+
+
+
 
 -libasound:
     + download: https://fossies.org/linux/misc/alsa-lib-1.2.7.2.tar.bz2/
-    --> CC=arm-linux-gnueabihf-gcc ./configure --target=arm-linux --host=x86_64-linux
+    --> CC=/usr/bin/arm-linux-gnueabihf-gcc ./configure --host=arm-linux
     --> sudo make
     --> sudo make install
-    (vi tri cai dat: alsa... /src/.libs)
+    voi configure nhu tren, libasound se duoc cai o /usr/lib sau khi chay sudo make install
+
+- (./configure --help de cau hinh, ko tuy thuoc vao cau lenh ./configure o tren)
+
+
+
+
 
 ************************************************************************
 
@@ -906,6 +930,8 @@ se dan den ca 2 thiet bi cung ko the truy cap duoc (du truoc do 1 trong 2 thiet 
     )
 
 - cmake -S path_source_file (chua CMakeLists.txt) -B path_build_folder (chua Makefile duoc gen boi cmake)
+
+- de cmake enable cross compile, trong toolchain file (tu tao) phai co set(CMAKE_SYSTEM_NAME "xx") truoc, roi moi set(CMAKE_SYSTEM_PROCESSOR "xxx") sau, neu khong cmake se khong cross compile
 
 ==== tham khao https://cmake.org/cmake/help/v3.17/guide/tutorial/index.html
 - # add library
@@ -1137,6 +1163,8 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 	--> executable: co dia chi offset co dinh: 0x08048000 for i386, 0x00400000 for x86 and 0x00010000 for arm.
 	--> shared object khong co offset co dinh (su dung: using address space layout randomization (ASLR))
 	--> to compile executable from c/c++ file : add -no-pie to gcc when compile source code (mac dinh la -pie --> shared object thay vi executable)
+    
+    + trong cmake (CMakeLists.txt), su dung CMAKE_CXX/CC_FLAGS de cai dat thong so nay: set(CMAKE_CXX/CC_FLAGS "-no-pie")
 
 
 ************************************************************************
