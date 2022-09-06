@@ -1119,6 +1119,7 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
     + start the agent: eval `ssh-agent` --> ssh-add ~/.ssh/<private_key_file>
     + add public key: copy content of id_rsa.pub to bitbucket web (avatar --> personal setting --> SSS keys --> add key --> save)
     + check: ssh -T git@bitbucket.org: You...Bitbucket. Shell...disable  --> success
+    + (web) avatar --> Personal Settings --> app passwords --> Create new password
 - Install git credential manager:
     + download: https://github.com/GitCredentialManager/git-credential-manager/releases/tag/v2.0.785 
     + install: sudo dpkg -i <path to package> --> git-credential-manager-core configure --> new terminal
