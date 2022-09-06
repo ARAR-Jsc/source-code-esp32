@@ -507,6 +507,11 @@ make CROSS_COMPILE=arm-linux-gnueabihf- orangepi_pc_defconfig (orangepi_pc_plus_
 - them #include <Arduino.h>, #include <SoftwareSerial.h> dong thoi khoi tao 1 SoftwareSerial object trong file .cpp dang muon debug
 - tai dong code muon debug trong file c.pp, khoi chay SoftwareSerial object (.begin(baudrate)) ---> use this object to print line (println)
 
+- to source code can be run in gdb:
+    + this file must be compile, configure in Makefile : -g (or -ggdb -o0 or -DDEBUG) in cmake it is: set(CMAKE_BUILD_TYPE Debug) or see(CMAKE_CXX_FLAGS "-[above option]") 
+    + the executable (ELF) can run for this architecture (for cross compile caes)
+
+
 ************************************************************************
 
 ********* xem chi tiet cua insmod error (linux)********************************
