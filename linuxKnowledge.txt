@@ -386,6 +386,17 @@ Download Loader fail (nhung thuc te android OS da duoc cai ok, reboot lai board 
 		make ARCH=arm LOADADDR=0x10008000 CROSS_COMPILE=arm-linux-gnueabihf- uImage modules
 ************************************************************************
 
+
+******************* loi khi rootfs (full OS) ***************************
+[[[tham khao]]]: https://forum.armbian.com/topic/2178-compilesh-fails-with-error-in-function-create_rootfs_cache-debootstrap-ngsh157/
+-khi build rootfs ma gap loi:
+        E: Failed getting release file http://localhost:3142/httpredir.debian.org/debian/dists/wheezy/Release
+		
+        --> them NO_APT_CACHER=yes vao  scripts/compile.sh (dau file) hoac thu setting Debian mirror khac o userpatches/lib.config nhu:
+            DEBIAN_MIRROR='ftp.si.debian.org/debian/
+        
+************************************************************************
+
 ************ compile u-boot, kernel from scratch ***********************
 tham khoa tai: http://www.orangepi.org/Docs/Building.html
 truoc tien, export nhung bien nay:
