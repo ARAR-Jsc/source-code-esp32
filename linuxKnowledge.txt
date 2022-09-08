@@ -589,6 +589,9 @@ sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin writ
 - chuyen swap file sang .vim/swapfiles:
     mkdir -p $HOME/.vim/swapfiles  (tao folder swapfiles)
     set directory=$HOME/.vim/swapfiles//
+-hide top bar:
+    sudo apt install gnome-shell-extension-autohidetopbar
+
 - tao shortcut voi env desktop ko co show desktop command: install wmctrl, tao 1 scritp trong /usr/bin (de cho de gan lenh trong phan tao shortcut mac dinh)
 dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
@@ -622,6 +625,8 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
     sudo apt install libdvdnav4 libdvdread4 gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libdvd-pkg
 
 - remove lock symbol in folder: sudo chown -R $USER: $HOME
+
+- error "rsync symbolink ...failed: Operation is permited" --> consider repalce -l by -K or -a (due to symbolink linking not support for FAT partition)
 
 ************************************************************************
 
@@ -1147,7 +1152,7 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
-************************* switch two gcc *******************************
+******************* switch between two gcc *****************************
 -   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.3 10 (10 is prior level)
  --> sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.3 10
  
@@ -1186,8 +1191,54 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
+************ meaning [&] in c++ (feature c++11) ************************
+[[tham khao]] https://en.wikipedia.org/wiki/Anonymous_function#C.2B.2B
+              https://stackoverflow.com/questions/12262019/c-operator
+              https://www.geeksforgeeks.org/lambda-expression-in-c/
+              https://www.programiz.com/cpp-programming/lambda-expression
+- lambda expression, to use lambda expression, must use auto keyword to deduce return-type, ex:
+    auto greet = [](){
+        // body lambda
+    }
+
+    equivalant normal function:
+    void greet()
+    {
+        // body function
+    }
+
+    call lambda exp: greet() like normal function
 
 
+ **Note:   lambda in STL algorithm:
+    
+    vector<int> nums = {1, 2, 3, 4, 5, 8, 10, 12};
+    
+    int even_count = count_if(nums.begin(), nums.end(), [](int num) {
+    return num % 2 == 0;
+    });
+
+    return num as current value evaluating of vector nums
+    
+    **use lambda due to need to manipulation (thao tac) with above declared var with var passed when call lambda exp
+
+************************************************************************
+
+
+***************** enable w1 thermal opipcplus **************************
+
+- add those lines to /etc/modules-load.d/modules.conf:
+    w1-sunxi
+    w1-therm
+    w1-gpio
+- add those lines to /boot/orangepiEnv.txt
+    overlays=w1-gpio
+    para_w1_pin=PA20
+    para_w1_int_pullup=1    #enable internal pullup
+--> reboot (after that check /sys/bus/w1/devices)
+
+** 2 lines para may be added in external/config/fex/orangepipcplus.fex (source code) before
+************************************************************************
 
 
 
