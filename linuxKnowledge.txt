@@ -1229,6 +1229,7 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ***************** enable w1 thermal opipcplus **************************
 
+- change config in external/config/kernel/linux-sunxi-current.conf (W1_SLAVE_THERM....)
 - add those lines to /etc/modules-load.d/modules.conf: (****)
     w1-sunxi
     w1-therm
