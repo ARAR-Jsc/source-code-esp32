@@ -152,6 +152,9 @@ F3 duoc gan trong vim, <S-i> vim se hieu la shift + i, 3 vim se them "#" vao, <E
 - gan tab = 4 space: set tabstop=4 (no van duoc xem la \t (tab) nhung vim se thong dich no bang 4 (co the gay loi khi lam viec voi python),
 softtabstop=4 (chinh tab = 4 column)
 
+- expandtab --> convert tab to 4 space in vim (can move by arrow key) by when write Makefile,
+it must be removed in vimrc due to cause "*** missing separator.  Stop" for make command
+
 ************************************************************************
 
 ********** luu y khi vua cai lai ubuntu ********************************
