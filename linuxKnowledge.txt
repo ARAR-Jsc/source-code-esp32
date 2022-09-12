@@ -30,7 +30,11 @@ khi khoi chay vmware (hien logo cua vmware) nhan giu shift den khi recovery menu
  
  khi vao lai giao dien GUI, co the khoa tai khoan root : sudo passwd --lock root /sudo -d root
  de mo lai sudo passwd root --> dat lai mk
- 
+
+**update:
+- access root if verify account by su command fail: su -s (no need root password) exit root: exit command
+
+
 *************************************************
 
 ****cach dat linux la os mac dinh khi khi dong ko dung grub-customizer ******
@@ -361,7 +365,7 @@ khi chay lenh sudo apt/update (do do hay bo qua loi nay khi update he thong)
             + run this script
             + after running without error, run sudo fdisk -l to see parition of emmc
             + sudo mount /dev/[partition of emmc]p2 (which ext4 format) /mnt
-            + cp dtb-[kernel version] --> ./dtb folder, cp uInitrd-[kernel version] --> uInitrd, vmlinux --> zImage (/boot folder)
+            + cp dtb-[kernel version] --> ./dtb folder, cp uInitrd-[kernel version] --> uInitrd, vmlinuz[kernel version] --> zImage (/boot folder)
             + change rootdev=UUID in orangepiEnvt.txt, remove "hdmi.audio=EDID:0 disp.screen0_output_mode=${disp_mode}" in bootargs, 
               remove console=tty0 from "...console=ttyS0,115200 console=tty0" in boot.cmd file (run mkimage to re-gen boot.scr)
               (see "dump kernel message when boot to serial port" below)
@@ -1268,6 +1272,12 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 - modify w1-gpio pin in buils OS phase: 
     modify kernel/orange-pi-5.4/arch/arm/boot/dts/overlay/sun8i-h3-w1-gpio.dts   (disconnect internet, so we need compile success before this turn)
+
+- enable multi w1-sensor:
+	modify sun8i-h3-w1-gpio.dts file: double each content of __overlay__ --> modify it as expected
+
+
+
 
 ************************************************************************
 
