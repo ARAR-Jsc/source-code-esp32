@@ -356,6 +356,16 @@ khi chay lenh sudo apt/update (do do hay bo qua loi nay khi update he thong)
 - script install_to_emmc.csh nam o: https://github.com/loboris/OrangePi-BuildLinux.git
 - check health status of emmc : sudo mmc extcsd read /dev/mmcblkx (sudo fdisk -l de biet emmc mmcblk nao)
 
+**update: - use this script in https://drive.google.com/file/d/1tfb-wv5ZQj6LbJjQ231QpHrnkaHUxjti/view?usp=sharing
+            + copy u-boot-sunxi-with-spl.bin, boot.cmd, boot.scr to /opt/boot
+            + run this script
+            + after running without error, run sudo fdisk -l to see parition of emmc
+            + sudo mount /dev/[partition of emmc]p2 (which ext4 format) /mnt
+            + cp dtb-[kernel version] --> ./dtb folder, cp uInitrd-[kernel version] --> uInitrd, vmlinux --> zImage (/boot folder)
+            + change rootdev=UUID in orangepiEnvt.txt, remove "hdmi.audio=EDID:0 disp.screen0_output_mode=${disp_mode}" in bootargs, 
+              remove console=tty0 from "...console=ttyS0,115200 console=tty0" in boot.cmd file (run mkimage to re-gen boot.scr)
+              (see "dump kernel message when boot to serial port" below)
+
 ************************************************************************
 
 ************** copy file tu may duoc access thong qua ssh **************
@@ -597,6 +607,8 @@ sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin writ
 
 - cat video: ffmpeg -i inputVideo.mp4 -ss 00:01:52 -c copy -t 00:00:10 output.mp4  (00:00:10 --> length output video
 
+- convert mp4 to mp3: ffmpeg -i video.mp4 -vn -acodec libmp3lame -ac 2 -ab 160k -ar 48000 audio.mp3
+
 - tao shortcut voi env desktop ko co show desktop command: install wmctrl, tao 1 scritp trong /usr/bin (de cho de gan lenh trong phan tao shortcut mac dinh)
 dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
@@ -696,7 +708,7 @@ repo: https://github.com/Halolo/orange-pi-distro
     phan vung 2 cu de mac dinh vay 
 -   dinh dang phan vung 1 bang mkfs.vfat (khong anh huong den w95 FAT (LBA) o tren, phan vung 2 mkfs.ext2 (phai la ext2, neu khong se bi loi initfs)
 -   copy cac file ke tren tru file u-boot-sunxi-with-spl.bin vao thu muc boot (mkdir phan_vung_1/boot), copy tat ca folder cua 1 iso khac de vao trong phan vung 2 (tao rootfs)
--   trong file orangepiEnv.txt sua rootdev=UUID=gia_tri quan sat thay khi cd /media/pc_name/phan_vung_2, neu khong se khong boot duoc
+-   trong file orangepiEnv.txt sua rootdev=UUID=gia_tri quan sat thay khi cd /media/pc_name/phan_vung_2, neu khong se khong boot duoc (blkid command to see UUID)
 -   umout sd card va boot
 * hien tai chi boot duoc tren serial, con HDMI van chua boot duoc (test tren orangepipcplus)
 
@@ -1025,6 +1037,7 @@ link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-d
     + cap phat vung nho cho con tro cap 2 voi, voi ham malloc, ta ep kieu ham malloc tuong ung voi kieu con tro, khi khai bao size,
     phai dung saize cua con tro cap 1(tuc la giam di 1 bac)
     o tren can sua lai: ptr = (char**)malloc(n * sizeof(cahr*)), nhu vay khi giai phong con tro se khong bi core dump
+
 ************************************************************************
 
 
