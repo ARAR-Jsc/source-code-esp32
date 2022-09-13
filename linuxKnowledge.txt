@@ -1278,17 +1278,33 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
-
 ******************* software IO mapped memory **************************
 [[ref]] https://stackoverflow.com/questions/1953562/include-asm-io-h-causes-error-asm-io-h-no-such-file-or-directory
 
 - directly IO mapped memory: ... [wait...]
 - software IO mapped memory:
 	+ use ioremap(phy_addr, size); this func in [where to build]/include/asm-generic/io.h
-	+ use iounmap( void __iomem *addr)
+		ex:
+		#define PA_CFG1_REG *(volatile uint32_t*)(ioremap(BASE_ADDR + registerOffset, 4);
+		--> PA_CFG1_REG: register of chip need to access
+			BASE_ADDR: base address of group register
+			registerOffset: offset address of accessed register
+			4 : number of bytes want to access
+		write to register: PA_CFG1_REG = value;
+		read register: int reg = PA_CFG1_REG
+		
+
+		other way:
+		void __iomem* PA_CFG1_REG = ioremap(BASE_ADDR + registerOffset, 4);
+		write to register: iowrite32(value, registerAddress);
+		read register: ioread32(registerAddress);
+	
+	+ use iounmap( void __iomem *addr) (no need, we can't also)
 	
 	** [where to build] ex:
 		+ in x86_64: /lib/modules/$(shell uname -r)/build
+	** in orangepi pc plus:  pullup just take affect in input mode
+
 
 ************************************************************************
 
