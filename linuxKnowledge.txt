@@ -380,7 +380,12 @@ khi chay lenh sudo apt/update (do do hay bo qua loi nay khi update he thong)
 v.d:
 scp /home/hello/Desktop/findScriptToFlashEMMC/OrangePi-BuildLinux/install_to_emmc  root@192.168.100.10:/home/orangepi
 
+==update==
+- Failed to add the host to the list of known hosts (/home/arar/.ssh/known_hosts).
+--> sudo chown -v $USER ~/.ssh/known_hosts
+
 ************************************************************************
+
 
 ********************* upload os into eMMC cho orangepi 4B **************
 - thao the nho ra khoi bo (de the SD van vao recovery mode duoc nhung khong flash firmware duoc, tren orangepi 4b 
@@ -1273,8 +1278,14 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 - modify w1-gpio pin in buils OS phase: 
     modify kernel/orange-pi-5.4/arch/arm/boot/dts/overlay/sun8i-h3-w1-gpio.dts   (disconnect internet, so we need compile success before this turn)
 
+
+
+|||| usless ||||
+** w1 is multiple device - 1 pin
 - enable multi w1-sensor:
 	modify sun8i-h3-w1-gpio.dts file: double each content of __overlay__ --> modify it as expected
+||||||||||||||||
+
 
 ************************************************************************
 

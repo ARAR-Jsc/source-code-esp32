@@ -3,25 +3,34 @@
 #include <stdlib.h>
 #include <dirent.h>
 
-char listDir()
+char listDir(const char* dirName, char** storeFolderName)
 {
 	struct dirent *entry;
 	DIR *dp;
-	dp = opendir("./");
-	if(dp == NULL)
-	{
-		printf("Not found dir\n");
-		return 0;
-	}
-	else
+	char i = 0;
+	char* matchFolder = NULL;
+	dp = opendir(dirName);
+	if(dp!=NULL)
 	{
 		while(entry = readdir(dp))
 		{
-			puts(entry->d_name);
-		printf("dump dir: %s\n", entry->d_name);
+			matchFolder = strstr(entry->d_name, "28-");
+			if(matchFolder != NULL)
+			{
+				printf("dump dir: %s\n", entry->d_name);
+				strcat(storeFolderName[i], "/sys/bus/w1/devices/");
+				strcat(storeFolderName[i], entry->d_name);
+				strcat(storeFolderName[i], "/w1_slave");
+				i++;
+			}
 		}
 		closedir(dp);
-		return 0;
+		return (i);
+	}
+	else
+	{
+		printf("open dir failed\n");
+		return -1;
 	}
 }
 
@@ -41,29 +50,68 @@ char* readFile(char* fileName)
 		strcpy(line, buffer);
 		line[strlen(line)]='\0';
 	}
-	printf("dump string: %s\n", line);
+	////printf("dump string: %s\n", line);
 	fclose(fd);
-	return line;
+	return line; //concurrent free line pointer
 }
 
 
 int main(int argc, char* argv[])
 {
-	listDir();
+	char** getNameDS=NULL;
+	char maxSlave = 5;
+	char totalFile = 0;
+	char i;
 	int numSlave;
-	char buffer[100];
+	char lineTemp[10];
+	float tempVal;
+	getNameDS = (char**)malloc(maxSlave*sizeof(char*));
+	for(i = 0; i < maxSlave; i++)
+	{
+		getNameDS[i] = (char*)malloc(55*sizeof(char));
+	}
+	
+	totalFile = listDir("/sys/bus/w1/devices/", getNameDS);
+	
+	for(i = 0; i < totalFile;i++)
+	{
+		printf("\n dumpFIle Name: %s\n", getNameDS[i]);
+	}
+		
+	//for(i = totalFile; i < maxSlave; i++)
+	//{
+	//	free(getNameDS[i]);
+	//}
+	//getNameDS = (char**)realloc(getNameDS,3);
+	
 	numSlave = atoi(readFile("/sys/devices/w1_bus_master1/w1_master_slave_count"));
 	printf("dump num slave: %u\n", numSlave);
+	
 	if(numSlave >= 1)
 	{
 		printf("Found :%u w1 slave\n", numSlave);
-		realpath("./", buffer);
-		//readFile("/sys/devices/w1_bus_master1/28-/w1_slave");
-		printf("dumpo buffer: %s\n", buffer);
+		//realpath("./", buffer);
+		strcpy(lineTemp, strchr(readFile(getNameDS[0]), '='));
+		// remove '=' in lineTemp
+		for(i = 0; i< sizeof(lineTemp) - 1; i++)
+		{
+			lineTemp[i] = lineTemp[i+1];
+		}
+		lineTemp[sizeof(lineTemp)]='\0';
+		printf("dump lineTemp: %s\n",lineTemp);
+		tempVal = (float)atoi(lineTemp)/1000;
+		printf("dump lineTemp: %2.3f\n",tempVal);
+		
 	}
 	else
 	{
 		printf("Not found thermel sensor\n");
 	}
+	//free pointer
+	for(i = 0; i < maxSlave; i++)
+	{
+		free(getNameDS[i]);
+	}
+	free(getNameDS);
 	return 0;
 }
