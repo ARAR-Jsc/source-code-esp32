@@ -654,6 +654,9 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
 - error "rsync symbolink ...failed: Operation is permited" --> consider repalce -l by -K or -a (due to symbolink linking not support for FAT partition)
 
+- in .cpp, if want to dump a string by using printf, we must convert the string to c string (cpp_string_var.c_str())
+
+
 ************************************************************************
 
 
@@ -772,7 +775,11 @@ tham khao https://medium.com/geekculture/start-using-the-sqlite-database-while-p
     --> sudo make install
     voi configure nhu tren, libasound se duoc cai o /usr/lib sau khi chay sudo make install
 
-- (./configure --help de cau hinh, ko tuy thuoc vao cau lenh ./configure o tren)
+ **(./configure --help de cau hinh, ko tuy thuoc vao cau lenh ./configure o tren)
+
+-  loi: automake-1.16: command not found when sudo make --> sudo apt install automake (if not installed) --> autoscan --> aclocal --> 
+         automake --add-missing --> autoconf --> ./configure --> sudo make (run again)
+
 
 
 
@@ -858,6 +865,7 @@ tao 1 .bb file trong helloworld voi noi dung nhu sau:
 -[loi khi compile] error: implicit declaration of function 'gpio_pad_select_gpio'; did you mean 'esp_rom_gpio_pad_select_gpio'? [-Werror=implicit-function-declaration]
 --> them rom/gpio.h vao2 trong components/driver/include/driver/gpio.h
 
+
 ************************************************************************
 
 ******************* tim hieu tool IDF **********************************
@@ -874,6 +882,21 @@ def main() (to initial empty array)(confgen.py file) --> __build_set_default(SDK
 -----> se mo nhung file defaults tim thay trong cmake_dir --> copy vao file sdkconfig
 
 
+
+- fix install failed when copy whole old esp-idf folder from other computetr into  (--no-warn-script-location) (reason: may be pip is older version)
+	+ install python > 3.6, python-pip3  (ex install python3.8)
+	+ update-alternatives python 3.8 -> python:
+		sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10   (do not touch to python3 , due to it is python3.6 which used by system)
+	+ remove pip-9.0.1.dist-info folder:
+		sudo rm -rf ../../../.espressif/python_env/idf5.0_py3.8_env/lib/python3.8/site-packages/pip-9.0.1.dist-info/
+	+ update pip for python3.8:
+		sudo /home/arar/.espressif/python_env/idf5.0_py3.8_env/bin/python -m pip install pip  (this command will install latest version of pip for python3.8)	
+	--> done
+	**(if above steps are not affect, add lines to ~/.bashrc and run install again:
+			if [ -d "$HOME/.local/bin" ] ; then
+		  		PATH="$HOME/.local/bin:$PATH"
+			fi
+	  )
 ************************************************************************
 
 ****************** dieu khien gpio tren opipcplus **********************
