@@ -897,6 +897,9 @@ def main() (to initial empty array)(confgen.py file) --> __build_set_default(SDK
 		  		PATH="$HOME/.local/bin:$PATH"
 			fi
 	  )
+[[ref]] https://stackoverflow.com/questions/63207385/how-do-i-install-pip-for-python-3-8-on-ubuntu-without-changing-any-defaults
+
+
 ************************************************************************
 
 ****************** dieu khien gpio tren opipcplus **********************
@@ -1069,6 +1072,25 @@ link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-d
     + cap phat vung nho cho con tro cap 2 voi, voi ham malloc, ta ep kieu ham malloc tuong ung voi kieu con tro, khi khai bao size,
     phai dung saize cua con tro cap 1(tuc la giam di 1 bac)
     o tren can sua lai: ptr = (char**)malloc(n * sizeof(cahr*)), nhu vay khi giai phong con tro se khong bi core dump
+
+
+- con tro this trong c++:
+	+ access to object's var is hidden by same name local var (knew this case before)
+	+ access as chain machanism, ex:
+		obj.sum().multi() 
+		--> normal case: obj: object
+						sum(): function
+						multi(): function inside sum()
+		--> with this pointer: obj: object
+						sum(), multi() is same level function
+			ex: in calss Test
+				Test &sum(){// something; return *this};
+				Test &multi(){// something; return *this};
+[[ref]] https://www.geeksforgeeks.org/this-pointer-in-c/
+
+
+
+
 
 ************************************************************************
 
