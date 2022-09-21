@@ -618,10 +618,33 @@ sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin writ
 
 - convert mp4 to mp3: ffmpeg -i video.mp4 -vn -acodec libmp3lame -ac 2 -ab 160k -ar 48000 audio.mp3
 
+- build-in command linux:
+	+ dirname "/home/hello/to/test.txt"  --> /home/hello/to (remove last slash)
+	+ base    "/home/hello/to/test.txt"  --> to  (get slash before last slash)
+	+ realpath <==> pwd
+	+ BASH_SOURCE:-$0                    --> get name script run   (/home/hello$ script.sh --> script.sh)
+	+ $(command)                         --> command: built-in command of LinuxOS
+	+ ${var}                             --> var: var in script or environment
+
+
+- source vs .
+	run script: ./myscript.sh --> open new shell --> run myscript.sh --> copy output to current shell, close new shell   (./ due to current directory not in $PATH, no need ./ if it in $PATH,
+	to add it to PATH: PATH=current_directory:$PATH)
+	--> no change effect to current shell by run myscript.sh
+	source script: run script in current shell
+	--> all change by run this script will be applied to current shell
+	**(source by source ./myscript.sh -- run script as mentioned above <==> . ./myscript.sh -- script will not run but it must be valid (it's mean if run command "source myscript.sh" it's OK)
+	**(source like a include: insert all script to script which called it)
+[[ref]] https://superuser.com/questions/176783/what-is-the-difference-between-executing-a-bash-script-vs-sourcing-it
+
+
+
+
+
 - tao shortcut voi env desktop ko co show desktop command: install wmctrl, tao 1 scritp trong /usr/bin (de cho de gan lenh trong phan tao shortcut mac dinh)
 dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
-+++++++++++++++++++++++++++++++++++++++++++++++++
+	+++++++++++++++++++++++++++++++++++++++++++++++++
 	#!/bin/bash
 	file='/home/dell/paraCheckFor_showDesktop.txt'
 
@@ -637,7 +660,7 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 	    echo "off" > '/home/dell/paraCheckFor_showDesktop.txt' 
 	    wmctrl -k off
 	fi
-+++++++++++++++++++++++++++++++++++++++++++++++++
+	+++++++++++++++++++++++++++++++++++++++++++++++++
 
 - set foldcloumn=0 to turn off gray bar in leftside in vim
 
