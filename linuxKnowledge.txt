@@ -260,7 +260,7 @@ bootloader) biet noi nao de tai u-boot.bin (khac voi boot mode pin, chan dung de
 ************************************************************************
 
 ******* loi undefined referenece khi bien dich bang gcc*****************
-- fix:  1) dung g++ thay vi dung gcc (day la van de cua linker0
+- fix:  1) dung g++ thay vi dung gcc (day la van de cua linker)
 		2) van dung gcc : gcc -g -o [name].exe .c/cpp file -lstdc++
 
 ************************************************************************
@@ -1088,6 +1088,18 @@ link tham khao: https://askubuntu.com/questions/1160113/system-program-problem-d
 				Test &multi(){// something; return *this};
 [[ref]] https://www.geeksforgeeks.org/this-pointer-in-c/
 
+
+- unique and shared pointer c++ (same as normal pointer but auto deallocated when go out it's scope):
+	+ unique pointer:
+		std::unique_ptr<data_type> pointer_name ( new data_type() ("()"as constructor if it's class))
+		or std::unique_ptr<data_type> pointer_name = make_unique<data_type>()  ("()" as constructor if it's class)
+	
+	+ shared pointer:
+		std::shared_ptr<data_type> pointer_name ( new data_type() ("()"as constructor if it's class))
+		or std::shared_ptr<data_type> pointer_name = make_shared<data_type>()  ("()" as constructor if it's class) // first object
+		std::shared_ptr<data_type> pointer_name2(pointer_name); //second object (copy constructor)
+		std::shared_ptr<data_type> pointer_name = pointer_name; //third object (assigning)
+[[ref] https://cppdeveloper.com/c-nang-cao/smart-pointers-stdshared_ptr-trong-c/
 
 
 
