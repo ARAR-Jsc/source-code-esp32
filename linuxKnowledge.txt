@@ -291,7 +291,9 @@ tu lenh chay: make evb-rk3399_defconfig (vidu)
 - := co nghia la gan gia tri cho bien va bien do khong the gan gia tri khac duoc nua,
   = gan gia tri nhu thong thuong, bien co the co gia tri khac xuyen suot makefile
 
-- khi make thuc hien viec include file theo Makefile, neu co file nao ko duoc tim thay, make se tam thoi bo qua, tiep tuc include sau do se quay lai include nhung file ko tim thay 1 lan nua, neu van khong thay -> dump fatal error va thoat. De buoc make ko tao fatal error trong truong hop nay co1 the dung, -include hoac sinclude command
+- khi make thuc hien viec include file theo Makefile, neu co file nao ko duoc tim thay, make se tam thoi bo qua,
+tiep tuc include sau do se quay lai include nhung file ko tim thay 1 lan nua, neu van khong thay -> dump fatal error va thoat.
+De buoc make ko tao fatal error trong truong hop nay co1 the dung, -include hoac sinclude command
 
 - dump message trong Makefile: $(info "noi dung can in ra man hinh")
 
@@ -313,7 +315,11 @@ orangepi-build/kernel/orange-pi-4.4-rockchip64/drivers/
 da bi chinh sua boi TD (2 file nay nam trong source code kernel duoc tai xuong boi main.sh (lenh fetch_from_repo)
 hoac tu tai tai (https://github.com/orangepi-xunlong/linux-orangepi.git)roi doi ten sang orangepi-4.4-ckchip64 
 
-++++ Noi incude cac thu vien trong cac file .c la kernel/include (voi source code cua OS tai tu orangepi)
+  **Noi incude cac thu vien trong cac file .c la kernel/include (voi source code cua OS tai tu orangepi)
+
+- when use build.sh to build, if don't automatically need pull source from git, set IGNORE_UPDATES = yes (sudo build.sh IGNORE_UPDATES=yes)
+    --> the modify source will be not changed
+    other way: comment this line in general.sh script: git checkout -f -q HEAD. This way can be use to add custom driver into driver folder
 
 ************************************************************************
 
@@ -621,7 +627,7 @@ sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin writ
 - build-in command linux:
 	+ dirname "/home/hello/to/test.txt"  --> /home/hello/to (remove last slash)
 	+ base    "/home/hello/to/test.txt"  --> to  (get slash before last slash)
-	+ realpath <==> pwd
+	+ realpath "/home/hello/to/test.txt" --> show path of file that used to create test.txt by ln -s command
 	+ BASH_SOURCE:-$0                    --> get name script run   (/home/hello$ script.sh --> script.sh)
 	+ $(command)                         --> command: built-in command of LinuxOS
 	+ ${var}                             --> var: var in script or environment
@@ -640,6 +646,9 @@ sunxi-tools/sunxi-fel -v -p uboot u-boot-orangepi/u-boot-sunxi-with-spl.bin writ
 
 - reserve ctrl-z command:
     bind -x '"\C-a":"fg"'  (ctrl-a)
+
+- no feedback to terminal when typing: reason dump  binary to STDOUT (test: run script with read input from user command: read, but ctrl-c without type input)
+  --> fix: type reset --> enter 
 
 
 - tao shortcut voi env desktop ko co show desktop command: install wmctrl, tao 1 scritp trong /usr/bin (de cho de gan lenh trong phan tao shortcut mac dinh)
@@ -721,7 +730,9 @@ theo thu tu kernel (uImage) --> ramdisk --> dtb, khong co khac
 trang tham khao: https://girishjoshi.io/post/build-image-for-orangepi-zero-using-yocto-project/
 repo: https://github.com/Halolo/orange-pi-distro
 
-- khi clone ve het cac source code:  git checkout cac meta-* (tru meta-opi), poky ve tag thud hoac sumo (hien tai nam 2022), sau do moi co the build duoc (tuy van con loi o qua trinh build phia sau, nhung lam buoc nay giup ta ko phai fix 1 nui loi truoc khi co the bat dau build)
+- khi clone ve het cac source code:  git checkout cac meta-* (tru meta-opi), poky ve tag thud hoac sumo (hien tai nam 2022), sau do moi co the build duoc
+  (tuy van con loi o qua trinh build phia sau, nhung lam buoc nay giup ta ko phai fix 1 nui loi truoc khi co the bat dau build)
+
 - cac loi cac the gap phai: 
     + loi override old syntax (do khac version cua bitbake: ten bien viet hoa + "_" + viet thuong), fix: doi "_" -> ":" o giua chu hoa va chu thuong)
     + loi ten bien khong dung(?!), thong bao loi hien ra la chu viet thuong het --> doi thanh chu viet hoa het
