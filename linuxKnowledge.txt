@@ -1371,6 +1371,11 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
     modify kernel/orange-pi-5.4/arch/arm/boot/dts/overlay/sun8i-h3-w1-gpio.dts   (disconnect internet, so we need compile success before this turn)
 
 
+- add module when compile OS:
+	+ add source code to drivers/ folder (source code and Makefile, Kconfig(optional))
+	+ add line : obj-m += nameOfModule to driver/Makefile
+	
+
 
 |||| usless ||||
 ** w1 is multiple device - 1 pin
