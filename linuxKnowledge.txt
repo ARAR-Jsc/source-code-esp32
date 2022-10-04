@@ -1344,23 +1344,24 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 ************************************************************************
 
 
-***************** enable w1 thermal opipcplus **************************
+***************** module and drivers opipcplus *************************
 
-- change config in external/config/kernel/linux-sunxi-current.conf (W1_SLAVE_THERM....)
-- add those lines to /etc/modules-load.d/modules.conf: (****)
-    w1-sunxi
-    w1-therm
-    w1-gpio
+- enable w1 module:
+	+ change config in external/config/kernel/linux-sunxi-current.conf (W1_SLAVE_THERM....)
+	+ add those lines to /etc/modules-load.d/modules.conf: (****)
+   		w1-sunxi
+    	w1-therm
+    	w1-gpio
 
  (****) this step can be skip (take a look to external/config/boards/orangepipcplus.conf
 
-- add those lines to /boot/orangepiEnv.txt
-    overlays=w1-gpio
-    para_w1_pin=PA20
-    para_w1_int_pullup=1    #enable internal pullup
---> reboot (after that check /sys/bus/w1/devices)
+	+ add those lines to /boot/orangepiEnv.txt
+    	overlays=w1-gpio
+    	para_w1_pin=PA20
+    	para_w1_int_pullup=1    #enable internal pullup
+	--> reboot (after that check /sys/bus/w1/devices)
 
-** 2 lines para may be added in external/config/fex/orangepipcplus.fex (source code) before
+	** 2 lines para may be added in external/config/fex/orangepipcplus.fex (source code) before
 
 [[ref]] https://f1atb.fr/index.php/2020/11/02/temperature-ds18b20-and-orange-pi-zero/
 
@@ -1374,7 +1375,15 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 - add module when compile OS:
 	+ add source code to drivers/ folder (source code and Makefile, Kconfig(optional))
 	+ add line : obj-m += nameOfModule to driver/Makefile
-	
+
+
+- note when write driver:
+	+ do not directly access to data, must be use copy_from_user or copy_to_user (if not it will be cause segmentation fault)
+	+ do not return 0 in dev_read, dev_write ( which function respectively with read, write from user space) --> this value cause dev_read, dev_write do infinite loop,
+	return -1, it mean, we can not write to device file (/dev/deviceName): not permition (regardless of sudo)
+	return -20, /dev/deviceName is not directory equivalant not write to this file 
+	--> should be return > 0 value (length of string)
+
 
 
 |||| usless ||||
