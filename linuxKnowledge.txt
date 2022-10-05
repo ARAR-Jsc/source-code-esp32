@@ -1426,6 +1426,23 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 ************************************************************************
 
 
+******************** programming pthread in c **************************
+- create new thread: pthread_create(...);
+- wait for child thread done: pthread_join(thread id, a pointer);
+- cancel a thread from other thread: pthread_cancel(thread id);
+- return value and exit to process which created the thread: pthread_exit(value/pointer);  
+  (just global var or dynamic memory pointer can be returned, local var will be destroy when return)
+
+- get thread id (normal thread id  = process id + 1 (in case only one thread in current process):
+	+ include sys/syscall.h, unistd.h library
+	+ syscall(SYS_gettid)
+- get thread id but can not print it (revert with above line), just used for comparing thread id:
+	+ pthread_t thread_1 = pthread_self();
+	+ pthread_t thread_A = pthread_self();
+	--> compare: pthread_equal(thread_1, thread_A)  --> true if same thread
+**Note: shouldn't use gettid()
+
+************************************************************************
 
 
 
