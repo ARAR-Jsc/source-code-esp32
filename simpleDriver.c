@@ -5,15 +5,22 @@
 #include <linux/fs.h>
 #include <linux/uaccess.h>
 #include <linux/delay.h>
-#include <asm-generic/io.h>
+////#include <asm-generic/io.h>
+#include <linux/interrupt.h>
+#include <linux/gpio.h>
+
 ////#include <sys/io.h>
 #define  DEVICE_NAME "ebbchar"
 #define  CLASS_NAME  "ebb"
 #define  BASE_ADDR   0x01C20800
 
+#define PA_CFG0_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x00, 4)))
 #define PA_CFG1_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x04, 4)))
 #define PA_PULL0_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x1C, 4)))
 #define PA_DAT_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x10, 4)))
+#define PA_EINT_CFG0_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x200, 4)))
+#define PA_EINT_CTL_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x210, 4)))
+#define PA_EINT_STATUS_REG *((volatile uint32_t*)(ioremap(BASE_ADDR + 0x214, 4)))
 
 
 
@@ -40,9 +47,18 @@ static struct file_operations ops = {
 };
 
 
+static irqreturn_t gpio_intr(int irq, void *ident)
+{
+	printk(KERN_INFO "Interrupt is triggered\n");
+	return IRQ_HANDLED;
+}
+
+
+
+
 static int __init ebbchar_init(void)
 {
-    
+    int err;
 	printk(KERN_INFO "EBBChar: Initializing the EBBChar LKM\n");
     // Try to dynamically allocated a major number for the device -- more difficult but worth it
 	majorNumber = register_chrdev(0, DEVICE_NAME, &ops);
@@ -78,13 +94,11 @@ static int __init ebbchar_init(void)
 	
 	printk(KERN_INFO "ivalue of PA_DAT_REG : %X\n", (PA_DAT_REG));
 	printk(KERN_INFO "ivalue of PA_CFG1_REG : %X\n", (PA_CFG1_REG));
-	printk(KERN_INFO "ivalue of PA_CFG1_REG_CHECK : %X\n", ioread32(PA_CFG1_REG_CHECK));
-	printk(KERN_INFO "ivalue of PA_PULL0_REG_CHECK : %X\n", ioread32(PA_PULL0_REG_CHECK));
 	printk(KERN_INFO "ivalue of PA_PULL0_REG : %X\n", (PA_PULL0_REG));
 	
 	PA_CFG1_REG = PA_CFG1_REG & 0xFFFFF111 ; //config output for PA10, PA9, PA8
 	PA_PULL0_REG = PA_PULL0_REG & 0xFFC0FFFF; //remove current value before write new value
-	PA_PULL0_REG = PA_PULL0_REG | (0x2A<<16); //pull down PA10, PA9, PA8
+	PA_PULL0_REG = PA_PULL0_REG | (0xA9<<14); //pull down PA10, PA9, PA8
 	msleep(100);
 	PA_DAT_REG = PA_DAT_REG | 0x00000100;
 	ssleep(1);
@@ -92,12 +106,31 @@ static int __init ebbchar_init(void)
 	ssleep(1);
 	PA_DAT_REG = PA_DAT_REG | 0x00000400;
 	ssleep(1);
+	printk(KERN_INFO "value of PA_CFG0_REG : %X\n", (PA_CFG0_REG));
 	printk(KERN_INFO "value of PA_DAT_REG : %X\n", (PA_DAT_REG));
 	printk(KERN_INFO "value of PA_CFG1_REG : %X\n", (PA_CFG1_REG));
-	printk(KERN_INFO "value of PA_CFG1_REG_CHECK : %X\n", ioread32(PA_CFG1_REG_CHECK));
-	printk(KERN_INFO "value of PA_PULL0_REG_CHECK : %X\n", ioread32(PA_PULL0_REG_CHECK));
 	printk(KERN_INFO "value of PA_PULL0_REG : %X\n", (PA_PULL0_REG));
 	printk(KERN_INFO "init driver done\n");
+
+	printk(KERN_INFO "value of PA_CFG0_REG: %x\n", PA_CFG0_REG);
+	//if((PA_CFG0_REG >> 30 & 0x07) == 0x07)
+	//{
+	//	printk(KERN_INFO " PA7 is available\n");
+	//}
+	
+	printk(KERN_INFO "dump gpio_to_irq :%d\n", gpio_to_irq(7));
+
+	//PA7 (0*32 + 7 = 7)
+	////err = request_irq(gpio_to_irq(7), gpio_intr, IRQF_SHARED| IRQF_TRIGGER_FALLING, THIS_MODULE->name, THIS_MODULE->name);
+	err = request_irq(gpio_to_irq(7), gpio_intr, IRQF_SHARED, THIS_MODULE->name, THIS_MODULE->name);
+	printk(KERN_INFO "dvalue of ext interrupt config 0: %X\n", PA_EINT_CFG0_REG);
+	printk(KERN_INFO "dvalue of ext interrupt control 0: %X\n", PA_EINT_CTL_REG);
+	printk(KERN_INFO "dvalue of ext interrupt status 0: %X\n", PA_EINT_STATUS_REG);
+	printk(KERN_INFO "value of PA_DAT_REG : %X\n", (PA_DAT_REG));
+	printk(KERN_INFO "value of PA_CFG1_REG : %X\n", (PA_CFG1_REG));
+	printk(KERN_INFO "value of PA_PULL0_REG : %X\n", (PA_PULL0_REG));
+	PA_EINT_CFG0_REG = PA_EINT_CFG0_REG | (1 << 28);
+	PA_EINT_CTL_REG = PA_EINT_CTL_REG | (1 << 7);
 	return 0;
 }
 
@@ -108,6 +141,8 @@ static void __exit ebbchar_exit(void)
 	class_destroy(ebbcharClass);
 	unregister_chrdev(majorNumber, DEVICE_NAME);
 	printk(KERN_INFO "EBBChar: goodbye from LKM\n");
+	free_irq(gpio_to_irq(7), THIS_MODULE->name);
+	printk(KERN_INFO "value of PA_CFG0_REG: %x\n", PA_CFG0_REG);
 	PA_DAT_REG = PA_DAT_REG & 0x00000000;
 }
 
@@ -141,10 +176,32 @@ static ssize_t dev_read(struct file* filep, char* buffer, size_t len, loff_t *of
 
 static ssize_t dev_write(struct file* filep, const char* buffer, size_t len, loff_t *offset)
 {
-	sprintf(message, "%s(%zu letters)", buffer, len); //appending received string with it's len
+	int rsult = copy_from_user(message, buffer, len);
+	if(rsult < 0)
+	{
+		printk(KERN_ERR "copy user to kernel failed\n");
+		return 1;
+	}
+	printk(KERN_INFO "dump string user kernel: %s\n", message);
 	sizeOfMessage = strlen(message);
-	printk(KERN_INFO "EBBChar: Received %zu characters from the user\n");
-	return 0;
+	printk(KERN_INFO "EBBChar: Received %zu characters from the user\n", len);
+	
+	if(strcmp(message, "1\n") == 0)
+	{
+		PA_DAT_REG = PA_DAT_REG | (1<<10);
+		////printk(KERN_INFO "value of PA_DAT_REG 1: %X\n", PA_DAT_REG);
+	}
+	else if(strcmp(message, "0\n") == 0)
+	{
+		PA_DAT_REG = PA_DAT_REG &(~(1<<10));
+		////printk(KERN_INFO "value of PA_DAT_REG 0: %X\n", PA_DAT_REG);
+	}
+	else
+	{
+		printk(KERN_ALERT "Invalid value\n");
+	}	
+
+	return len;
 }
 
 static int dev_release(struct inode* inodep, struct file* filep)
