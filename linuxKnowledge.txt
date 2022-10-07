@@ -1444,6 +1444,11 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
+************************ prototype error *******************************
+- error: function declaration isn’t a prototype [-Werror=strict-prototypes] static void doSomething()
+ --->fix: add void in () it mean doSomething(void)
+
+******************** programming pthread in c **************************
 
 
 
