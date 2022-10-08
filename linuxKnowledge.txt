@@ -1371,6 +1371,14 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 - modify w1-gpio pin in buils OS phase: 
     modify kernel/orange-pi-5.4/arch/arm/boot/dts/overlay/sun8i-h3-w1-gpio.dts   (disconnect internet, so we need compile success before this turn)
 
+    |||| usless ||||
+    ** w1 is multiple device - 1 pin
+    - enable multi w1-sensor:
+        modify sun8i-h3-w1-gpio.dts file: double each content of __overlay__ --> modify it as expected
+    ||||||||||||||||
+
+
+
 
 - add module when compile OS:
 	+ add source code to drivers/ folder (source code and Makefile, Kconfig(optional))
@@ -1385,12 +1393,25 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 	--> should be return > 0 value (length of string)
 
 
+- prototype error
+    + error: function declaration isn’t a prototype [-Werror=strict-prototypes] static void doSomething()
+    --->fix: add void in () it mean doSomething(void)
 
-|||| usless ||||
-** w1 is multiple device - 1 pin
-- enable multi w1-sensor:
-	modify sun8i-h3-w1-gpio.dts file: double each content of __overlay__ --> modify it as expected
-||||||||||||||||
+- in interrupt handler of driver module (linux kernel) - interrupt context, can not use ioremap to access to physic address, because interrupt handler is not allow sleep
+  to access to register as normal (kernel mode) use gpio_set_value(), to access register as kernel context (kernel mode) when interrupt handler is called, we must use 
+  workqueue or kernel thread, these function is called in interrupt handler
+  ex workqueue:
+    void workQueueFunc(struct work_struct *work);
+    DECLARE_WORK(workqueue, workQueueFunc);
+    in interrupt handler:
+        ...
+        schedule_work(&workqueue);
+
+
+[ref] https://stackoverflow.com/questions/71904268/how-to-access-physical-address-during-interrupt-handler-linux
+
+
+
 
 
 ************************************************************************
@@ -1444,11 +1465,6 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 
 ************************************************************************
 
-************************ prototype error *******************************
-- error: function declaration isn’t a prototype [-Werror=strict-prototypes] static void doSomething()
- --->fix: add void in () it mean doSomething(void)
-
-******************** programming pthread in c **************************
 
 
 
