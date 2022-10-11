@@ -1471,6 +1471,38 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 ************************************************************************
 
 
+***************** variadic function <==> "..." *************************
+- used to pass a uknown total of argument (until this func is called)
+	+ data type in va_arg command will be check argument passed, if not data type not match
+	argument will be ignore
+	ex:
+	variadic()
+	{
+	...
+	va_arg(ap, double);
+	...
+	}
+	in main func
+	...
+	variadic(4, 45, 56, 67, 8.9);
+
+	--> argument in variadic:
+		argument 0: 5.4, all of argument before 5.4 will be ignore
+
+- used in preprocessor (#define):
+	ex:
+		#define pr_TD(ad,...) printf("%d\n", ad), printf(__VA_ARGS__)
+		use:
+			int adb = 60;
+			int adc = 70;
+			printf(adc, "test tring:%d\n", adb);
+
+	--> explain: variadic function :
+		pfirst printf will be catch first argument (ad), other argument will be catch by second
+		printf function.
+************************************************************************
+
+
 
 
 
