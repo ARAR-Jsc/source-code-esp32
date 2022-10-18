@@ -130,7 +130,7 @@ s:password (nhap password duoi dang ma ASCII)
 ************ xem tag/branch hien tai ***********************************
 - tag: git describe --exact-match --tag
 - branch: git branch
-
+- git log --graph : see history push
 ************************************************************************
 
 ************ nhay toi dau hoac cuoi file *******************************
@@ -693,6 +693,8 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 - error "rsync symbolink ...failed: Operation is permited" --> consider repalce -l by -K or -a (due to symbolink linking not support for FAT partition)
 
 - in .cpp, if want to dump a string by using printf, we must convert the string to c string (cpp_string_var.c_str())
+
+- a = b < 0 --> a = ?, if b < 0 (statement is true) --> a = 1, else if b > 0 --> a = 0  --> this is  a ternary case
 
 
 ************************************************************************
