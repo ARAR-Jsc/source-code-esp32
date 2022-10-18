@@ -696,6 +696,9 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
 - a = b < 0 --> a = ?, if b < 0 (statement is true) --> a = 1, else if b > 0 --> a = 0  --> this is  a ternary case
 
+- list all server (TDP, UDP is listening): netstat -ntulp
+
+
 
 ************************************************************************
 
