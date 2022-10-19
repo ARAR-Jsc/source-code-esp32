@@ -698,7 +698,14 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 
 - list all server (TDP, UDP is listening): netstat -ntulp
 
-
+- TCP client-server:
+	+ nc(or telnet) ip_address port  (from client terminal)  <--> nc -l ip_address port (server terminal)
+- convert ip address from text to binary: inet_addr(ip_address); ip_address in string format
+	<==> inet_pton(domain, string ip_address, varIPAddress)
+		domain: AF_INET/AF_INET6/AF_LOCAL
+		ip_address in text format
+		varIPAddress: var which store ip address (normally: struct sockadd_in)
+[[ref]] https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
 
 ************************************************************************
 
@@ -1505,7 +1512,9 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 	--> explain: variadic function :
 		pfirst printf will be catch first argument (ad), other argument will be catch by second
 		printf function.
+
 ************************************************************************
+
 
 
 
