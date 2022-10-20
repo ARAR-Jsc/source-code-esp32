@@ -1479,6 +1479,9 @@ co 2 cach giai quyet hoac la giam memory cua oject do xuong hoac la bo no vao tr
 	+ pthread_t thread_A = pthread_self();
 	--> compare: pthread_equal(thread_1, thread_A)  --> true if same thread
 **Note: shouldn't use gettid()
+	+ If thread is not done by pthread_exit() --> this can cause "stack smashing detceted" error or segmentation fault
+
+
 
 ************************************************************************
 

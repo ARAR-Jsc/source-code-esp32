@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include <errno.h> 
 #include <arpa/inet.h>
+#include <sys/un.h>
 
 #define WR _IOW('b','b', int32_t*)
 
@@ -19,17 +20,34 @@
 
 #define PORT 8080
 
-#define UDP
+////#define UDP
 #ifndef UDP
 #define TCP
 #endif
 
-void sockFD(void)
+
+#define msgQueue
+
+#ifdef msgQueue
+#include <sys/ipc.h>        //for ftok()
+#include <sys/msg.h>
+#endif
+
+//#define sameHost
+
+#define SOCKET_NAME "/tmp/socket.socket"
+
+void* sockFD(void* arg)
 {
 	int sockFd, add_len, newSocket;
 	int opt = 1;
-	
+
+	#ifdef sameHost
+	struct sockaddr_un address;
+	remove("/tmp/socket.socket");
+	#else
 	struct sockaddr_in address;
+	#endif
 	char buffer[1024] = { 0 };
 	
 	add_len = sizeof(address);
@@ -38,7 +56,7 @@ void sockFD(void)
 	#ifdef UDP
 	sockFd = socket(AF_INET, SOCK_DGRAM, 0);
 	#elif defined(sameHost)
-	sockFd = socket(AF_LOCAL, SOCK_DGRAM, 0);
+	sockFd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
 	#else
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	#endif
@@ -47,7 +65,9 @@ void sockFD(void)
 		printf("create socket failed\n");
 		exit(EXIT_FAILURE);
 	}
-	
+
+	#ifndef sameHost
+
 	//force attach new socket to 8080 port
 
 	if(setsockopt(sockFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
@@ -56,22 +76,25 @@ void sockFD(void)
 		exit(EXIT_FAILURE);
 	}
 
+	#endif
 	//bind
 	
 	#ifdef sameHost
-	address.sin_family = AF_LOCAL;
+	memset(&address, 0, sizeof(address));
+	address.sun_family = AF_UNIX;
+	strncpy(address.sun_path, SOCKET_NAME, sizeof(address.sun_path) - 1);
 	#else
 	address.sin_family = AF_INET;
-	#endif
 
 	////address.sin_addr.s_addr = inet_addr(INADDR_ANY);
-	////address.sin_addr.s_addr = inet_addr("192.168.100.17"); //<==> inet_pton
-	if(inet_pton(AF_INET, "192.168.100.17", &address.sin_addr) <= 0)
-	{
-		printf("wrong ip address\n");
-	}
+	address.sin_addr.s_addr = inet_addr("192.168.100.6"); //<==> inet_pton
+	////if(inet_pton(AF_LOCAL, "192.168.100.6", &address.sin_addr) <= 0)
+	////{
+	////	printf("wrong ip address\n");
+	////}
 	address.sin_port = htons(PORT);
 
+	#endif
 	if(bind(sockFd, (const struct sockaddr*)&address, add_len))
 	{
 		printf("bind socket failed exitnum: %d -- errno: %d\n", EXIT_FAILURE, errno);
@@ -93,23 +116,26 @@ void sockFD(void)
 	
 	if((newSocket = accept(sockFd, (struct sockaddr*)&address, &add_len)) < 0)
 	{
-		printf("listen scoket failed\n");
+		printf("Accept failed\n");
 		exit(EXIT_FAILURE);
 	}
 	
-	int readData = read(newSocket, buffer, 1024);
+	int readData = read(newSocket, buffer, sizeof(buffer));
 	
 	printf("received msg from TCP: %s\n", buffer);
 	
 	//close listen
 	close(newSocket);
 	//close listening
-	shutdown(sockFd, O_RDWR);
+	shutdown(sockFd, SHUT_RDWR);
+	#ifdef sameHost
+	remove("/tmp/socket.socket");
+	#endif
 	#else
 	int flags = 0;
 	while(1)
 	{
-		int len = recvfrom(sockFd, buffer, 1024, flags, (struct sockaddr*) &address, &add_len);
+		int len = recvfrom(sockFd, buffer, sizeof(buffer), flags, (struct sockaddr*) &address, &add_len);
 		if(len < 0)
 		{
 			printf("error when receive msg\n");
@@ -122,7 +148,48 @@ void sockFD(void)
 
 	close(sockFd);
 	#endif
+	pthread_exit(0);
 }
+
+
+void* messageQueue(void* arg)
+{
+	//create message buffer struct
+	struct msg_buffer{
+	long msg_type;
+	char msg[100];
+	}message;
+
+	int msg_id;
+	key_t mykey;
+	//create unique key
+
+	mykey = ftok("progfile", 65);  //ftok(pathname, projectNum);
+
+	//create meesage queue, return msg id
+	if((msg_id = msgget(mykey, 0666 | IPC_CREAT)) == -1)
+	{
+		printf("Get msg id failed, errno: %d\n", errno);
+	}
+	
+	/*
+	send mess to que, 0 in 3rth argument: if none-zero, when error, 
+	return immediately, shall not send message
+	*/
+	if( msgrcv(msg_id, &message, sizeof(message), 1, 0) == -1)
+	{
+		printf("xin chao , errno: %d\n", errno);
+	}   
+	printf("Received msg: %s\n", message.msg);
+	//destroy mess queue
+	msgctl(msg_id, IPC_RMID, NULL);
+	pthread_exit(0);
+
+}
+
+
+
+
 
 struct ab
 {
@@ -145,8 +212,6 @@ void* calSum(void* arg)
 	printf("dump value of sum: a + b : %d\n", calA->a + calA->b);
 	for(i = 0; i < 65535; i++)
 	{
-		//printf("dump string i: %d\n", i);
-		//sleep(1);
 		pthread_mutex_lock(&mutexVar);
 		commonVar += 1;
 		pthread_mutex_unlock(&mutexVar);
@@ -168,11 +233,8 @@ void* calSub(void* arg)
 		commonVar += 1;
 		pthread_mutex_unlock(&mutexVar);
 	}
-	////printf("value of a: %u\n", abValue->a);
-	////printf("value of b: %u\n", abValue->b);
 	printf("result: a - b: %d\n", abValue->a - abValue->b);
 	pointer3 = &(abValue->a);
-	////printf("value piinter3: %u\n", *pointer3);
 	printf("id of this thread3: %lu\n", syscall(SYS_gettid));
 	pthread_exit(pointer3);
 }
@@ -199,12 +261,11 @@ void* newPro(void* arg)
 
 	char* argv2[] = {"program", NULL};
 	printf("pid of parent process: %d\n", getpid());
-	////pid_t pid = fork();
-	////if(pid == 0)
-	////{
-	////	printf("pid of child process: %d\n", getpid());
-	////}
+	#ifdef sameHost
+	execv("/home/orangepi/Desktop/clientSocket", argv2);
+	#else
 	execv("/home/orangepi/Desktop/testDriver", argv2);
+	#endif
 
 }
 
@@ -221,22 +282,26 @@ int main(int argc, char* argv[])
 	void *ptr2 = NULL;
 	void *ptr3 = NULL;
 	void *ptr4 = NULL;
+	void *ptrRunSocket = NULL;
+	void *ptrRunMsgQueue = NULL;
 	if( pthread_mutex_init(&mutexVar, NULL) != 0)
 	{
 		printf("init mutex failed\n");
 	}
-	////printf("dump value of ad: %x\n", &calAB.a);
 
-	//call socket
-	sockFD();
-
-
+	
+	pthread_t runSocket;
+	pthread_t runMsgQueue;
 	pthread_t newThread;
 	pthread_t thread2;
 	pthread_t thread3;
 	pthread_t thread4;
 	calAB.a = 10;
 	calAB.b = 20;
+
+	//run socket
+	pthread_create(&runSocket, NULL, sockFD, NULL);
+	pthread_create(&runMsgQueue, NULL, messageQueue, NULL);
 	//signal
 	struct sigaction sa = { 0 };
 	sa.sa_sigaction=signalHandler1;
@@ -255,11 +320,16 @@ int main(int argc, char* argv[])
 
 
 	}
-	////sleep(5);
+	
 	//pthread_cancel(newThread); //cancel a thread, in this case newThread
+	
+	pthread_join(runMsgQueue, &ptrRunMsgQueue);
+	pthread_join(runSocket, &ptrRunSocket);
 	pthread_join(newThread, &ptr); //wait for child thread end
 	pthread_join(thread2, &ptr2); //wait for child thread end
+	
 	////pthread_join(thread3, &ptr3); //wait for child thread end
+	
 	pthread_join(thread4, &ptr4); //wait for child thread end
 	printf("return value from thread2: %u\n", *((int*)ptr2));
 	printf("var commonVal: %d\n", commonVar);
