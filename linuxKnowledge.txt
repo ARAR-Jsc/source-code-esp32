@@ -709,6 +709,12 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 		varIPAddress: var which store ip address (normally: struct sockadd_in)
 [[ref]] https://www.geeksforgeeks.org/tcp-server-client-implementation-in-c/
 
+
+- error: gpg: WARNING: unsafe ownership on homedir '/home/hello/.gnupg' --> due to run gpg with sudo, gpg run as root, but directory is still user
+
+    --> fix: stp1: stop dirmngr: sudo gpgconf --kill dirmngr
+             stp2: restore owner ship: sudo chown -R $USER ~/.gnupg
+
 ************************************************************************
 
 
