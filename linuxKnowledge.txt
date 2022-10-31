@@ -715,6 +715,12 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
     --> fix: stp1: stop dirmngr: sudo gpgconf --kill dirmngr
              stp2: restore owner ship: sudo chown -R $USER ~/.gnupg
 
+
+- compare 2 float number is wrong way, must be convert it to double before comparing
+
+- for loop in c: for(a, b, c) --> if b = 0 --> for loop will not run, regardless of a = 0 too
+
+
 ************************************************************************
 
 
