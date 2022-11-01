@@ -719,7 +719,12 @@ dung lenh wmctrl -k on/off (khong lay duoc trang thai) vi du:
 - compare 2 float number is wrong way, must be convert it to double before comparing
 
 - for loop in c: for(a, b, c) --> if b = 0 --> for loop will not run, regardless of a = 0 too
+    + in for loop have 2 condition "for (i=0, j=5; j >0, i < 10; i ++, j--)", compiler will use right hand side to run ( i< 10)
 
+- why do we use pointer instead normally var: because not way to pass "reference" to function, one thing, value of this var can be modified in function 
+    (if pass by pointer)
+
+- why do we use struct, union:   use struct to manage easly, data in struct need to be separate when access, union no need(length of data type is interested instead of)
 
 ************************************************************************
 
