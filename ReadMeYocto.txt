@@ -12,6 +12,8 @@
 	to 
 		DISTRO = "opi"
  		SPL_BINARY = "./u-boot-sunxi-with-spl.bin"' >> "$BUILD_DIR/conf/local.conf"
+	- Add line in source-me file: "$DIR/meta-sunxi \\" right below  "$DIR/meta-opi \\"
+	- Copy meta-sunxi folder to orange-pi-distro (where has meta-opi folder)
 2. Build the source code
 	- source environment: . source orange-pi-pc-plus
 	- Start build: bitbake opipcplus-minimal
