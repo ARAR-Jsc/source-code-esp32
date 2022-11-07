@@ -1075,7 +1075,7 @@ se dan den ca 2 thiet bi cung ko the truy cap duoc (du truoc do 1 trong 2 thiet 
 
 - cmake -S path_source_file (chua CMakeLists.txt) -B path_build_folder (chua Makefile duoc gen boi cmake)
 
-- de cmake enable cross compile, trong toolchain file (tu tao) phai co set(CMAKE_SYSTEM_NAME "xx") truoc, roi moi set(CMAKE_SYSTEM_PROCESSOR "xxx") sau, neu khong cmake se khong cross compile
+- de cmake enable cross compile, trong toolchain file (tu tao) phai co set(CMAKE_SYSTEM_NAME "xx") truoc, roi moi set(CMAKE_SYSTEM_PROCESSOR "xxx") sau, neu khong cmake se khong cross compile, dung option -DCMAKE_TOOLCHAIN_FILE=path_to_file
 
 ==== tham khao https://cmake.org/cmake/help/v3.17/guide/tutorial/index.html
 - # add library
